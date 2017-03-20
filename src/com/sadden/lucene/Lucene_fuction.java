@@ -90,6 +90,7 @@ public class Lucene_fuction {
 				config = new IndexWriterConfig(analyzer);
 				writer = new IndexWriter(directory, config);
 			}
+			pic.show();
 			Document doc = new Document();
 			doc.add(new StringField("UserID", pic.getUserId(), Field.Store.YES));
 			doc.add(new StringField("PicID", pic.getPicId(), Field.Store.YES));

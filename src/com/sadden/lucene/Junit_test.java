@@ -1,5 +1,7 @@
 package com.sadden.lucene;
 
+import java.util.ArrayList;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,10 +27,16 @@ public class Junit_test {
 	public void luc_cop()
 	{
 		Lucene_fuction luc = new Lucene_fuction();
-		Picture pic = new Picture("admin", "20", "2017-3-15", "C:\\Users\\lenovo\\Desktop\\±œ…Ë\\≤‚ ‘Õº∆¨\\3.jpg", "man");
-		luc.readIndex();
-//		luc.AddIndex(pic);
-
+		OCR_function ocr = new OCR_function();
+		String result = null;
+		ArrayList<Picture> PicList = new ArrayList<>();
+		PicList = luc.queryIndex_Tag("topic");
+		for(Picture pic:PicList){
+			result=ocr.ReadPicture(pic, 0);
+			
+		}
+		System.out.println(result);
+		
 	}
 	
 	

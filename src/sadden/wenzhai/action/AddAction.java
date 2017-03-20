@@ -1,5 +1,10 @@
 package sadden.wenzhai.action;
 
+import java.io.File;
+
+import org.apache.commons.io.FileUtils;
+
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.sadden.lucene.Lucene_fuction;
 import com.sadden.lucene.Picture;
@@ -11,7 +16,9 @@ public class AddAction extends ActionSupport {
 	String Time;
 	String URL;
 	String Tag;
-
+	private File image; // 上传的文件
+	private String imageFileName; // 文件名称
+	private String imageContentType; // 文件类型
 		
 	/**
 	 * from admin_index.jsp tp AddNew.jsp
@@ -24,15 +31,39 @@ public class AddAction extends ActionSupport {
 
 	/**
 	 * add a picture to index
+	 * @throws Exception 
 	 */
-	public String AddPic()
+	public String AddPic() throws Exception
 	{
- 
+		//upload path
+		String realpath = "G:\\Workspace\\WenZhai\\images";
+		UploadPicture(realpath);
+		URL = realpath+"\\"+imageFileName;
+		System.out.println(URL);
 		Picture pic  =new Picture(UserID, PicID, Time, URL, Tag);
 		Lucene_fuction luc = new Lucene_fuction();
 		luc.AddIndex(pic);
 		return "AddSuccess";
 	}
+	
+	/**
+	 * upload a picture in G:/workspace path
+	 * @throws Exception
+	 */
+	public void UploadPicture(String realpath )throws Exception
+	{
+		//	String realpath = ServletActionContext.getServletContext().getRealPath("/images");
+		
+		System.out.println("realpath: " + realpath);
+		if (image != null) {
+			File savefile = new File(new File(realpath), imageFileName);
+			if (!savefile.getParentFile().exists())
+				savefile.getParentFile().mkdirs();
+			FileUtils.copyFile(image, savefile);
+			ActionContext.getContext().put("message", "文件上传成功");
+		}
+	}
+	
 	
 	public String getUserID() {
 		return UserID;
@@ -74,6 +105,28 @@ public class AddAction extends ActionSupport {
 		this.Tag = Tag;
 	}
 	
-	
+	public File getImage() {
+		return image;
+	}
+
+	public void setImage(File image) {
+		this.image = image;
+	}
+
+	public String getImageFileName() {
+		return imageFileName;
+	}
+
+	public void setImageFileName(String imageFileName) {
+		this.imageFileName = imageFileName;
+	}
+
+	public String getImageContentType() {
+		return imageContentType;
+	}
+
+	public void setImageContentType(String imageContentType) {
+		this.imageContentType = imageContentType;
+	}
 	
 }

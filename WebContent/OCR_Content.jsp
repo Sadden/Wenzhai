@@ -9,7 +9,7 @@
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="cache-control" content="no-cache">
 <meta http-equiv="expires" content="0">
-<title>Add a new Picture</title>
+<title>OCR new Content</title>
 </head>
 <body>
 	<!-- ${pageContext.request.contextPath}/upload/execute_upload.do -->

@@ -6,6 +6,7 @@ public class Picture {
 	private String Time;
 	private String URL;
 	private String Tag;
+	private String Content;
 	
 	public Picture(String UserID, String PicID, String Time, String URL, String Tag)
 	{
@@ -14,6 +15,7 @@ public class Picture {
 		this.setTag(Tag);
 		this.setTime(Time);
 		this.setURL(URL);
+		this.setContent("empty");
 	}
 
 	public void show()
@@ -23,6 +25,7 @@ public class Picture {
 		System.out.println("Time: "+ Time);
 		System.out.println("URL: "+ URL);
 		System.out.println("Tag: "+ Tag);
+		System.out.println("Content: "+ Content);
 	}
 	public String getTime() {
 		return Time;
@@ -62,6 +65,14 @@ public class Picture {
 
 	public void setTag(String tag) {
 		Tag = tag;
+	}
+
+	public String getContent() {
+		return Content;
+	}
+
+	public void setContent(String content) {
+		Content = content;
 	}
 	
 }
