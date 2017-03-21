@@ -27,15 +27,8 @@ public class Junit_test {
 	public void luc_cop()
 	{
 		Lucene_fuction luc = new Lucene_fuction();
-		OCR_function ocr = new OCR_function();
-		String result = null;
-		ArrayList<Picture> PicList = new ArrayList<>();
-		PicList = luc.queryIndex_Tag("topic");
-		for(Picture pic:PicList){
-			result=ocr.ReadPicture(pic, 0);
-			
-		}
-		System.out.println(result);
+	//	luc.delete_tag("man");
+		luc.readIndex();
 		
 	}
 	

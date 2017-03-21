@@ -2,11 +2,17 @@ package sadden.wenzhai.action;
 
 import java.io.File;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FileUtils;
+import org.apache.struts2.ServletActionContext;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.sadden.lucene.Lucene_fuction;
+import com.sadden.lucene.OCR_function;
 import com.sadden.lucene.Picture;
 
 public class AddAction extends ActionSupport {
@@ -41,10 +47,32 @@ public class AddAction extends ActionSupport {
 		URL = realpath+"\\"+imageFileName;
 		System.out.println(URL);
 		Picture pic  =new Picture(UserID, PicID, Time, URL, Tag);
+		
+		String content = DoOCR(pic);
+		pic.setContent(content);
+		
 		Lucene_fuction luc = new Lucene_fuction();
 		luc.AddIndex(pic);
+		
+		HttpServletRequest request = ServletActionContext.getRequest();
+		request.setAttribute("ViewPicture", pic);
+		
 		return "AddSuccess";
 	}
+	
+	/**
+	 * use OCR_fucntion to read picture	
+	 * @param pic
+	 * @return read result
+	 */
+	public String DoOCR(Picture pic)
+	{
+		String Result = null;
+		OCR_function ocr = new OCR_function();
+		Result = ocr.ReadPicture(pic, 0);
+		return Result;
+	}
+	
 	
 	/**
 	 * upload a picture in G:/workspace path

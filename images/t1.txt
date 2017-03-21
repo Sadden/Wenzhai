@@ -1,0 +1,12 @@
+Abstract—Iopic modeling lias been widely used roi analyzing text document collections. Recently. tbeie have
+been slg‘mﬁC’o\nt advaxlcslnems in vanous topic modeling tecbniques. pamculaily in tlie tom of piobabilisoc
+giapblcal modeling. state—or-tlie-an teclmiques such as Latent Duicblet Allocation (LDA) liaye been successfully
+applied In vlsual text analytics. However. most ortbe widely-used metliods based on piobabilistic modeling bave
+drawbacks m terms of consistency riom multiple inns and empiiical conveigence. Fuitbeimoie. due to tbe
+complicateduess in tbe roimulation and the algorithnl. LDA cannot easily incoipomte yailous types of usei
+feedback. To tackle tlils pioblem. we pmpose a ieliable and ﬂexible visual analytlcs system rot topic modeling
+called UTOPIAN (User-driven Toplc modellng based on lnteiactiye Nonnegative Matiui Factorization). centeied
+aiound its semi-supervised roimulation UTOPIAN enables useis to inteiact with tbe topic modeling method and
+steei tbe iesult in a usei-diiven mannlai. we demonstiate tbe capability of UTOPIAN Via seveial usage scenanos
+with ieal—woild document Corpuses such as I.l1foV1s/VAST papei data set and pioduct ieview data seis
+

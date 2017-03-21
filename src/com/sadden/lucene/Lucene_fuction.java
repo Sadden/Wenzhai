@@ -13,6 +13,7 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
@@ -42,9 +43,7 @@ public class Lucene_fuction {
 	public void createIndex() {
 		try {
 
-
-			if(writer == null)
-			{
+			if (writer == null) {
 				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
 				analyzer = new StandardAnalyzer();
 				config = new IndexWriterConfig(analyzer);
@@ -54,17 +53,22 @@ public class Lucene_fuction {
 			Document doc1 = new Document();
 			Document doc2 = new Document();
 
+			pic_pre1 = new Picture("Sadden", "pre1", "2017-3-21", "C:\\Users\\lenovo\\Desktop\\毕设\\测试图片\\1.jpg",
+					"tank");
+			pic_pre2 = new Picture("Sadden", "pre2", "2017-3-21", "C:\\Users\\lenovo\\Desktop\\毕设\\测试图片\\3.jpg", "man");
 			doc1.add(new StringField("UserID", pic_pre1.getUserId(), Field.Store.YES));
 			doc1.add(new StringField("PicID", pic_pre1.getPicId(), Field.Store.YES));
 			doc1.add(new StringField("Time", pic_pre1.getTime(), Field.Store.YES));
 			doc1.add(new StringField("URL", pic_pre1.getURL(), Field.Store.YES));
-			doc1.add(new StringField("tag", "tank", Field.Store.YES));
+			doc1.add(new StringField("tag", pic_pre1.getTag(), Field.Store.YES));
+			doc1.add(new StringField("Content", pic_pre1.getContent(), Field.Store.YES));
 
 			doc2.add(new StringField("UserID", pic_pre2.getUserId(), Field.Store.YES));
 			doc2.add(new StringField("PicID", pic_pre2.getPicId(), Field.Store.YES));
 			doc2.add(new StringField("Time", pic_pre2.getTime(), Field.Store.YES));
 			doc2.add(new StringField("URL", pic_pre2.getURL(), Field.Store.YES));
-			doc2.add(new StringField("tag", "ship", Field.Store.YES));
+			doc2.add(new StringField("tag", pic_pre2.getTag(), Field.Store.YES));
+			doc2.add(new StringField("Content", pic_pre2.getContent(), Field.Store.YES));
 
 			System.out.println(pic_pre1.getTag());
 			System.out.println(pic_pre2.getTag());
@@ -79,12 +83,9 @@ public class Lucene_fuction {
 		}
 	}
 
-	
-	public void AddIndex(Picture pic)
-	{
+	public void AddIndex(Picture pic) {
 		try {
-			if(writer == null)
-			{
+			if (writer == null) {
 				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
 				analyzer = new StandardAnalyzer();
 				config = new IndexWriterConfig(analyzer);
@@ -97,6 +98,7 @@ public class Lucene_fuction {
 			doc.add(new StringField("Time", pic.getTime(), Field.Store.YES));
 			doc.add(new StringField("URL", pic.getURL(), Field.Store.YES));
 			doc.add(new StringField("tag", pic.getTag(), Field.Store.YES));
+			doc.add(new StringField("Content", pic.getContent(), Field.Store.YES));
 
 			writer.addDocument(doc);
 			writer.commit();
@@ -106,39 +108,87 @@ public class Lucene_fuction {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	// list all index
 	public void readIndex() {
-		try{
-		if(reader==null)
-		{
-			System.out.println("reader is null, new reader");
-			directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
-			reader = DirectoryReader.open(directory);
-		}
-		System.out.println("max num:" + reader.maxDoc());
-		System.out.println("index num:" + reader.numDocs());
-		// 删除了的索引数
-		System.out.println("delete index num:" + reader.numDeletedDocs());
-		reader.close();
-		}catch (IOException e) {
+		try {
+			if (reader == null) {
+				System.out.println("reader is null, new reader");
+				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
+				reader = DirectoryReader.open(directory);
+			}
+			System.out.println("max num:" + reader.maxDoc());
+			System.out.println("index num:" + reader.numDocs());
+			// 删除了的索引数
+			System.out.println("delete index num:" + reader.numDeletedDocs());
+			reader.close();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
+	/**
+	 * query index in tag
+	 * 
+	 * @param Content
+	 * @return query result in ArrayList<Picture>
+	 * @throws IOException
+	 */
+	public ArrayList<Picture> queryIndex_Content(String Content) {
+		ArrayList<Picture> PicList = new ArrayList<>();
+		try {
 
+			analyzer = new StandardAnalyzer();
+			if (reader == null) {
+				System.out.println("reader is null, new reader");
+				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
+				reader = DirectoryReader.open(directory);
+			}
+			IndexSearcher searcher = new IndexSearcher(reader);
+			// 查询哪个字段
+			QueryParser parse = new QueryParser("Content", analyzer);
+			// 查询关键字
+			Query query = parse.parse(Content);
+			TopDocs topDocs = searcher.search(query, 1000);
+			// 碰撞结果 query for socredoc[]
+			ScoreDoc[] hits = topDocs.scoreDocs;
+			if (hits.length == 0) {
+				System.out.println("no result");
+				reader.close();
+				return PicList;
+			} else {
+				for (int i = 0; i < hits.length; i++) {
+					// build for each scoredoc
+					ScoreDoc hit = hits[i];
+					// get the doc from each scoredoc
+					Document hitDoc = searcher.doc(hit.doc);
+					// 结果按照得分来排序。主要由 关键字的个数和权值来决定
+					showResult(hit, hitDoc);
+					addResult(hit, hitDoc, PicList);
+				}
+			}
 
-	// query
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return PicList;
+	}
+
+	/**
+	 * query index in tag
+	 * 
+	 * @param tag
+	 * @return query result in ArrayList<Picture>
+	 */
 	public ArrayList<Picture> queryIndex_Tag(String tag) {
 		ArrayList<Picture> PicList = new ArrayList<>();
 		try {
 			// 搜索器
 			// IndexSearcher searcher = getSearcher();
 			analyzer = new StandardAnalyzer();
-			if(reader==null)
-			{
+			if (reader == null) {
 				System.out.println("reader is null, new reader");
 				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
 				reader = DirectoryReader.open(directory);
@@ -164,7 +214,7 @@ public class Lucene_fuction {
 					// 结果按照得分来排序。主要由 关键字的个数和权值来决定
 					showResult(hit, hitDoc);
 					addResult(hit, hitDoc, PicList);
-				}			
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -179,7 +229,13 @@ public class Lucene_fuction {
 		}
 		return PicList;
 	}
-//show the result from the query
+
+	/**
+	 * show the content & fields of a result hit
+	 * 
+	 * @param hit
+	 * @param hitDoc
+	 */
 	public void showResult(ScoreDoc hit, Document hitDoc) {
 		System.out.println(hit.doc + "---->" + hit.score);
 		System.out.println("UserID: " + hitDoc.get("UserID"));
@@ -187,8 +243,16 @@ public class Lucene_fuction {
 		System.out.println("Time: " + hitDoc.get("Time"));
 		System.out.println("URL: " + hitDoc.get("URL"));
 		System.out.println("Tag: " + hitDoc.get("tag"));
+		System.out.println("Content: " + hitDoc.get("Content"));
 	}
-//get result picture from the query
+
+	/**
+	 * Add hit document into Picturelist
+	 * 
+	 * @param hit
+	 * @param hitDoc
+	 * @param PicList
+	 */
 	public void addResult(ScoreDoc hit, Document hitDoc, ArrayList<Picture> PicList) {
 
 		String UserID = hitDoc.get("UserID");
@@ -196,8 +260,9 @@ public class Lucene_fuction {
 		String Time = hitDoc.get("Time");
 		String URL = hitDoc.get("URL");
 		String Tag = hitDoc.get("tag");
-		
+		String Content = hitDoc.get("Content");
 		Picture PicResult = new Picture(UserID, PicID, Time, URL, Tag);
+		PicResult.setContent(Content);
 		PicList.add(PicResult);
 
 	}
@@ -214,47 +279,83 @@ public class Lucene_fuction {
 		}
 	}
 
+	/**
+	 * delete the term with tag
+	 * 
+	 * @param tag
+	 */
+	public void delete_tag(String tag) {
+		try {
+			if (writer == null) {
+				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
+				analyzer = new StandardAnalyzer();
+				config = new IndexWriterConfig(analyzer);
+				writer = new IndexWriter(directory, config);
+			}
+			Term term = new Term("tag", tag);
+			writer.deleteDocuments(term);
+			writer.commit();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
 
 	/**
-	 * 索引删除
+	 * delete the term with picId
+	 * 
+	 * @param PicID
 	 */
-	// public void deleteIndex(){
-	// try {
-	// Term[] terms = new Term[2];
-	// Term term = new Term("id", "1");
-	// terms[0] = term;
-	// term = new Term("id", "3");
-	// terms[1] = term;
-	// //将id为 1和3的索引删除。
-	// //也可以传一个Query数组对象，将Query查找的结果删除。
-	// writer.deleteDocuments(terms);
-	// //deleteDocuments
-	// writer.commit();
-	// } catch (IOException e) {
-	// e.printStackTrace();
-	// }
-	// }
+	public void delete_PicID(String PicID) {
+		try {
+			if (writer == null) {
+				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
+				analyzer = new StandardAnalyzer();
+				config = new IndexWriterConfig(analyzer);
+				writer = new IndexWriter(directory, config);
+			}
+			Term term = new Term("PicID", PicID);
+			writer.deleteDocuments(term);
+			writer.commit();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-	// /**
-	// * 索引更新
-	// */
-	// public void updateIndex(){
-	// try {
-	// Term term = new Term("id", "2");
-	// Document doc = new Document();
-	// doc.add(new StringField("id", ids[1], Field.Store.YES));
-	// doc.add(new StringField("name", "lsup", Field.Store.YES));
-	// doc.add(new StringField("email", emails[1], Field.Store.YES));
-	// doc.add(new IntField("fileSize", fileSizes[1], Field.Store.YES));
-	// doc.add(new TextField("content", contents[1], Field.Store.NO));
-	//
-	// //更新的时候，会把原来那个索引删掉，重新生成一个索引
-	// writer.updateDocument(term, doc);
-	//
-	// writer.commit();
-	// } catch (IOException e) {
-	// e.printStackTrace();
-	// }
-	// }
+	}
+
+	/**
+	 * update the Picture
+	 * @param PicID to find original Picture
+	 * @param newpic new picture
+	 */
+	public void update_PicID(String PicID, Picture newpic) {
+		try {
+			if (writer == null) {
+				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
+				analyzer = new StandardAnalyzer();
+				config = new IndexWriterConfig(analyzer);
+				writer = new IndexWriter(directory, config);
+			}
+			Term term = new Term("PicID", PicID);
+			Document doc = new Document();
+			doc.add(new StringField("UserID", newpic.getUserId(), Field.Store.YES));
+			doc.add(new StringField("PicID", newpic.getPicId(), Field.Store.YES));
+			doc.add(new StringField("Time", newpic.getTime(), Field.Store.YES));
+			doc.add(new StringField("URL", newpic.getURL(), Field.Store.YES));
+			doc.add(new StringField("tag", newpic.getTag(), Field.Store.YES));
+			doc.add(new StringField("Content", newpic.getContent(), Field.Store.YES));
+
+			// 更新的时候，会把原来那个索引删掉，重新生成一个索引
+			writer.updateDocument(term, doc);
+			writer.commit();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+
 
 }

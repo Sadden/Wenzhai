@@ -39,10 +39,14 @@
  <result name = "ToAdd">/AddNew.jsp</result>
 </action>
 <action name = "AddAction"   method= "AddPic" class = "sadden.wenzhai.action.AddAction">
- <result name = "AddSuccess">/AddSuccess.jsp</result>
+ <result name = "AddSuccess">/OCR_Content.jsp</result>
 </action>
-<action name = "Upload_test"   method= "Upload_test" class = "sadden.wenzhai.action.UploadAction">
- <result name = "OK">/AddSuccess.jsp</result>
+<action name = "DoOCR"   method= "Confirm" class = "sadden.wenzhai.action.DoOCR">
+ <result name = "ToAddSuccess">/AddSuccess.jsp</result>
+</action>
+
+<action name = "SearchAction_Content"   class = "sadden.wenzhai.action.SearchAction_Content">
+ <result name = "Content_Result">/admin_result.jsp</result>
 </action>
 
 </package>

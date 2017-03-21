@@ -75,5 +75,7 @@ public class Picture {
 		Content = content;
 	}
 	
+	
+	
 }
 

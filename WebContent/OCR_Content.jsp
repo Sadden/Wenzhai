@@ -1,4 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
+import="com.sadden.lucene.*"
+	import="sadden.wenzhai.servelet.*" import="java.util.*"
+	import="sadden.wenzhai.action.*"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -9,37 +12,54 @@
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="cache-control" content="no-cache">
 <meta http-equiv="expires" content="0">
-<title>OCR new Content</title>
+<title>View the content</title>
 </head>
 <body>
 	<!-- ${pageContext.request.contextPath}/upload/execute_upload.do -->
 	<!-- ${pageContext.request.contextPath}/upload2/upload2.do -->
-	<h1>欢迎来到创建检索系统，请配合我们的工作：</h1>
+	<h1>now will do ocr to generate content：</h1>
 	<div class="main">
-	<h2>输入新建图片的参数</h2>
-		<form action="AddAction.action" enctype="multipart/form-data" method="post" >
+	<%if(request.getAttribute("ViewPicture")!=null){
+		Picture pic=(Picture)request.getAttribute("ViewPicture");
+		if(pic!=null)
+		{
 			
-
-			<p>
-				<label>UserID：</label> <input type="text" name="UserID" value="" />
-			</p>
-						<p>
-				<label>PicID：</label> <input type="text" name="PicID" value="" />
-			</p>
-			<p>
-				<label>Time：</label> <input type="text" name="Time" value="" />
-			</p>
-						<p>
-				<label>Upload Picture：</label> 
-						<input type="file" name="image" /> 
-			</p>
-						<p>
-				<label>Tag：</label> <input type="text" name="Tag" value="" />
-			</p>
-			<p>
-				<input type="submit" value="Generate Content" />
-			</p>
+			 String userId = pic.getUserId();
+				String PicId = pic.getPicId();
+				String Time = pic.getTime();
+				String URL = pic.getURL();
+				String Tag = pic.getTag();
+				String Content = pic.getContent();
+			%>
+			<h2>look below</h2>
+		<form action="DoOCR.action" enctype="multipart/form-data" method="post" >
+			<label>View Picture </label>
+			<img src="<%=URL%>">
+			<h1><%=Content %></h1>
+			<input type="text" name="Content" value=<%=Content %> />
+			<table class="base_table">
+				<tr>
+					<th>UserID</th>
+					<th>PicId</th>
+					<th>Time</th>
+					<th>URL</th>
+					<th>Tag</th>
+				</tr>
+				<tr>
+					<td><%=userId %></td>
+					<td><%=PicId %></td>
+					<td><%=Time %></td>
+					<td><%=URL %></td>
+					<td><%=Tag %></td>
+				</tr>
+				</table>
+			 <input type="submit" value="Confirm"/>
 		</form>
+			<% 
+		}
+	}
+	%>
+	
 
 	</div>
 </body>
