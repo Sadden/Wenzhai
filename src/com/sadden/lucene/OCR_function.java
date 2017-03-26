@@ -19,7 +19,7 @@ public class OCR_function {
 	 * @return
 	 */
 
-	public String ReadPicture(Picture pic, int flag) {
+	public String ReadPicture(String realpath, int flag) {
 		String OcrLangData = null;
 		String result = null;
 		if (flag == 0) {
@@ -31,7 +31,7 @@ public class OCR_function {
 		}
 		String OcrCommand = "tesseract";
 		Runtime runtime = Runtime.getRuntime();
-		String URL = pic.getURL();
+		String URL = realpath;
 		String outPath = URL.substring(0, URL.lastIndexOf("."));
 		String command = OcrCommand + " " + URL + " " + outPath + " " + OcrLangData;
 		try {

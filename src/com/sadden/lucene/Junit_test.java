@@ -26,9 +26,13 @@ public class Junit_test {
 	@Test 
 	public void luc_cop()
 	{
-		Lucene_fuction luc = new Lucene_fuction();
+	//	Lucene_fuction luc = new Lucene_fuction();
 	//	luc.delete_tag("man");
-		luc.readIndex();
+	//	luc.readIndex();
+		
+		Luc_cop luc =new Luc_cop();
+		luc.queryIndex();
+		
 		
 	}
 	

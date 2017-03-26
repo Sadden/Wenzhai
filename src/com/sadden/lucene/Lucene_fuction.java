@@ -19,6 +19,7 @@ import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -91,6 +92,7 @@ public class Lucene_fuction {
 				config = new IndexWriterConfig(analyzer);
 				writer = new IndexWriter(directory, config);
 			}
+			System.out.println("*************Add new picture**************");
 			pic.show();
 			Document doc = new Document();
 			doc.add(new StringField("UserID", pic.getUserId(), Field.Store.YES));
@@ -129,7 +131,7 @@ public class Lucene_fuction {
 	}
 
 	/**
-	 * query index in tag
+	 * query index in Content
 	 * 
 	 * @param Content
 	 * @return query result in ArrayList<Picture>
@@ -138,7 +140,6 @@ public class Lucene_fuction {
 	public ArrayList<Picture> queryIndex_Content(String Content) {
 		ArrayList<Picture> PicList = new ArrayList<>();
 		try {
-
 			analyzer = new StandardAnalyzer();
 			if (reader == null) {
 				System.out.println("reader is null, new reader");
@@ -147,10 +148,12 @@ public class Lucene_fuction {
 			}
 			IndexSearcher searcher = new IndexSearcher(reader);
 			// 查询哪个字段
-			QueryParser parse = new QueryParser("Content", analyzer);
+			TermQuery query = new TermQuery(new Term("Content",Content));
+	//		QueryParser parse = new QueryParser("Content", analyzer);
 			// 查询关键字
-			Query query = parse.parse(Content);
-			TopDocs topDocs = searcher.search(query, 1000);
+	//		Query query = parse.parse(Content);
+			System.out.println("**************query:"+query);
+			TopDocs topDocs = searcher.search(query, 5);
 			// 碰撞结果 query for socredoc[]
 			ScoreDoc[] hits = topDocs.scoreDocs;
 			if (hits.length == 0) {
@@ -161,6 +164,14 @@ public class Lucene_fuction {
 				for (int i = 0; i < hits.length; i++) {
 					// build for each scoredoc
 					ScoreDoc hit = hits[i];
+					 // 取对象document的对象id
+		            int docID = hit.doc;
+
+		            // 相关度得分
+		            float score = hit.score;
+		            
+		            System.out.println("ID:"+docID);
+		            System.out.println("score:"+score);
 					// get the doc from each scoredoc
 					Document hitDoc = searcher.doc(hit.doc);
 					// 结果按照得分来排序。主要由 关键字的个数和权值来决定
@@ -172,7 +183,6 @@ public class Lucene_fuction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return PicList;
 	}
 
@@ -198,7 +208,7 @@ public class Lucene_fuction {
 			QueryParser parse = new QueryParser("tag", analyzer);
 			// 查询关键字
 			Query query = parse.parse(tag);
-			TopDocs topDocs = searcher.search(query, 1000);
+			TopDocs topDocs = searcher.search(query, 5);
 			// 碰撞结果 query for socredoc[]
 			ScoreDoc[] hits = topDocs.scoreDocs;
 			if (hits.length == 0) {
@@ -230,6 +240,56 @@ public class Lucene_fuction {
 		return PicList;
 	}
 
+	
+	
+	/**
+	 * query index in UserID
+	 * 
+	 * @param Content
+	 * @return query result in ArrayList<Picture>
+	 * @throws IOException
+	 */
+	public ArrayList<Picture> queryIndex_UserID(String UserID) {
+		ArrayList<Picture> PicList = new ArrayList<>();
+		try {
+			analyzer = new StandardAnalyzer();
+			if (reader == null) {
+				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
+				reader = DirectoryReader.open(directory);
+			}
+			IndexSearcher searcher = new IndexSearcher(reader);
+			// 查询哪个字段
+			QueryParser parse = new QueryParser("UserID", analyzer);
+			// 查询关键字
+			Query query = parse.parse(UserID);
+			TopDocs topDocs = searcher.search(query, 5);
+			// 碰撞结果 query for socredoc[]
+			ScoreDoc[] hits = topDocs.scoreDocs;
+			if (hits.length == 0) {
+				System.out.println("no result");
+				reader.close();
+				return PicList;
+			} else {
+				for (int i = 0; i < hits.length; i++) {
+					// build for each scoredoc
+					ScoreDoc hit = hits[i];
+					// get the doc from each scoredoc
+					Document hitDoc = searcher.doc(hit.doc);
+					
+					// 结果按照得分来排序。主要由 关键字的个数和权值来决定
+					showResult(hit, hitDoc);
+					addResult(hit, hitDoc, PicList);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return PicList;
+	}
+	
+	
+	
 	/**
 	 * show the content & fields of a result hit
 	 * 
@@ -327,8 +387,11 @@ public class Lucene_fuction {
 
 	/**
 	 * update the Picture
-	 * @param PicID to find original Picture
-	 * @param newpic new picture
+	 * 
+	 * @param PicID
+	 *            to find original Picture
+	 * @param newpic
+	 *            new picture
 	 */
 	public void update_PicID(String PicID, Picture newpic) {
 		try {
@@ -355,7 +418,5 @@ public class Lucene_fuction {
 			e.printStackTrace();
 		}
 	}
-
-
 
 }

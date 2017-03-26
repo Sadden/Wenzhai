@@ -18,10 +18,10 @@
     <!-- 设置上传文件的临时文件夹,默认使用javax.servlet.context.tempdir -->
     <constant name="struts.multipart.saveDir " value="d:/tmp" />
 <package name = "default" namespace="/" extends= "struts-default">
-<action name = "helloworld" class = "sadden.wenzhai.action.Helloword">
+<!-- <action name = "helloworld" class = "sadden.wenzhai.action.Helloword">
  <result>/login.jsp</result>
 </action>
-
+ -->
 <action name = "LoginAction"  class = "sadden.wenzhai.action.LoginAction">
  <result name = "admin">/admin_index.jsp</result>
 <result name = "IDErro">/IDErro.jsp </result>
@@ -48,6 +48,23 @@
 <action name = "SearchAction_Content"   class = "sadden.wenzhai.action.SearchAction_Content">
  <result name = "Content_Result">/admin_result.jsp</result>
 </action>
+
+<action name = "SearchAction_UserID"   class = "sadden.wenzhai.action.SearchAction_UserID">
+ <result name = "UserID_Result">/admin_result.jsp</result>
+</action>
+
+<action name = "Delete"   method= "DeleteIndex"  class = "sadden.wenzhai.action.DeleteAction">
+ <result name = "DeleteOK">/admin_index.jsp</result>
+</action>
+
+<action name = "ToUpdate"   method= "ToUpdate"  class = "sadden.wenzhai.action.UpdateAction">
+ <result name = "ToUpdate">/Update.jsp</result>
+</action>
+
+<action name = "Update"   method= "Update"  class = "sadden.wenzhai.action.UpdateAction">
+ <result name = "UpdateOK">/admin_index.jsp</result>
+</action>
+
 
 </package>
 

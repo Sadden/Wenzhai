@@ -42,19 +42,23 @@ public class AddAction extends ActionSupport {
 	public String AddPic() throws Exception
 	{
 		//upload path
-		String realpath = "G:\\Workspace\\WenZhai\\images";
-		UploadPicture(realpath);
-		URL = realpath+"\\"+imageFileName;
-		System.out.println(URL);
-		Picture pic  =new Picture(UserID, PicID, Time, URL, Tag);
+		HttpServletRequest request = ServletActionContext.getRequest();
+		ServletContext servletContext = ServletActionContext.getServletContext();
+		request.getSession();
 		
-		String content = DoOCR(pic);
+		String path = ServletActionContext.getServletContext().getRealPath("/images");
+//		String path = request.getServletContext().getContextPath()+"/images";
+		UploadPicture(path);
+		URL = imageFileName;
+		System.out.println("URL:"+URL);
+		Picture pic  =new Picture(UserID, URL, Tag);
+		
+		String content = DoOCR(path+"/"+URL);
 		pic.setContent(content);
 		
 		Lucene_fuction luc = new Lucene_fuction();
 		luc.AddIndex(pic);
 		
-		HttpServletRequest request = ServletActionContext.getRequest();
 		request.setAttribute("ViewPicture", pic);
 		
 		return "AddSuccess";
@@ -65,11 +69,11 @@ public class AddAction extends ActionSupport {
 	 * @param pic
 	 * @return read result
 	 */
-	public String DoOCR(Picture pic)
+	public String DoOCR(String realpath)
 	{
 		String Result = null;
 		OCR_function ocr = new OCR_function();
-		Result = ocr.ReadPicture(pic, 0);
+		Result = ocr.ReadPicture(realpath, 0);
 		return Result;
 	}
 	
@@ -80,9 +84,9 @@ public class AddAction extends ActionSupport {
 	 */
 	public void UploadPicture(String realpath )throws Exception
 	{
-		//	String realpath = ServletActionContext.getServletContext().getRealPath("/images");
+			
 		
-		System.out.println("realpath: " + realpath);
+		System.out.println("path: " + realpath);
 		if (image != null) {
 			File savefile = new File(new File(realpath), imageFileName);
 			if (!savefile.getParentFile().exists())

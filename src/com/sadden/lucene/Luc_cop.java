@@ -59,7 +59,7 @@ public class Luc_cop {
 	{
 		try {  
 			   //本地存储  
-			      directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));  
+			      directory = FSDirectory.open(Paths.get("G:\\Lucene_index2"));  
 			      //内存存储  
 			      //directory = new RAMDirectory();  
 			      //初始化分词器  
@@ -84,7 +84,7 @@ public class Luc_cop {
 		      doc.add(new StringField("name", "lsup", Field.Store.YES));  
 		      doc.add(new StringField("email", emails[1], Field.Store.YES));  
 		      doc.add(new IntField("fileSize", fileSizes[1], Field.Store.YES));  
-		      doc.add(new TextField("content", contents[1], Field.Store.NO));  
+		      doc.add(new TextField("content", contents[1], Field.Store.YES));  
 		        
 		      //更新的时候，会把原来那个索引删掉，重新生成一个索引  
 		      writer.updateDocument(term, doc);  
@@ -148,9 +148,9 @@ public class Luc_cop {
 		      //搜索器  
 		      IndexSearcher searcher = getSearcher();  
 		      //查询哪个字段  
-		      QueryParser parse = new QueryParser("email", analyzer);  
+		      QueryParser parse = new QueryParser("content", analyzer);  
 		      //查询关键字  
-		      Query query = parse.parse("zs@baidu.com");  
+		      Query query = parse.parse("under");  
 		      TopDocs topDocs = searcher.search(query, 1000);  
 		      
 		      
@@ -164,7 +164,7 @@ public class Luc_cop {
 		        ScoreDoc hit = hits[i];  
 		        Document hitDoc = searcher.doc(hit.doc);  
 		        //结果按照得分来排序。主要由 关键字的个数和权值来决定  
-		        System.out.println("("+hit.doc+"-"+hit.score+")"+"id:"+hitDoc.get("id")+" name:"+hitDoc.get("name")+" email:"+hitDoc.get("email"));  
+		        System.out.println("("+hit.doc+"-"+hit.score+")"+"id:"+hitDoc.get("id")+" name:"+hitDoc.get("name")+" email:"+hitDoc.get("email")+hitDoc.get("content"));  
 		      }  
 		    } catch (IOException e) {  
 		      e.printStackTrace();  

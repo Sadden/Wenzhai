@@ -7,18 +7,17 @@ import="com.sadden.lucene.*"
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="cache-control" content="no-cache">
 <meta http-equiv="expires" content="0">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 <title>View the content</title>
 </head>
 <body>
 	<!-- ${pageContext.request.contextPath}/upload/execute_upload.do -->
 	<!-- ${pageContext.request.contextPath}/upload2/upload2.do -->
-	<h1>now will do ocr to generate content：</h1>
-	<div class="main">
+	<div class="main" align="center">
 	<%if(request.getAttribute("ViewPicture")!=null){
 		Picture pic=(Picture)request.getAttribute("ViewPicture");
 		if(pic!=null)
@@ -31,19 +30,17 @@ import="com.sadden.lucene.*"
 				String Tag = pic.getTag();
 				String Content = pic.getContent();
 			%>
-			<h2>look below</h2>
+			<h2>Check below:</h2>
 		<form action="DoOCR.action" enctype="multipart/form-data" method="post" >
-			<label>View Picture </label>
-			<img src="<%=URL%>">
-			<h1><%=Content %></h1>
-			<input type="text" name="Content" value=<%=Content %> />
-			<table class="base_table">
+			<img src="<%=request.getServletContext().getContextPath()+"/images/"+URL%>">
+			<h4>Content:<%=Content %></h4>
+			<table class="table table-bordered table-hover">
 				<tr>
-					<th>UserID</th>
-					<th>PicId</th>
-					<th>Time</th>
-					<th>URL</th>
-					<th>Tag</th>
+					<th class="text-center">UserID</th>
+					<th class="text-center">PicId</th>
+					<th class="text-center">Time</th>
+					<th class="text-center">URL</th>
+					<th class="text-center">Tag</th>
 				</tr>
 				<tr>
 					<td><%=userId %></td>
@@ -53,7 +50,7 @@ import="com.sadden.lucene.*"
 					<td><%=Tag %></td>
 				</tr>
 				</table>
-			 <input type="submit" value="Confirm"/>
+			 <input type="submit" class="btn btn-success"value="Confirm"/>
 		</form>
 			<% 
 		}

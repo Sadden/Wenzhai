@@ -2,6 +2,9 @@ package sadden.wenzhai.action;
 
 import java.io.File;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 
@@ -15,10 +18,14 @@ public class UploadAction extends ActionSupport {
 
 	public String Upload_test() throws Exception {
 	//	String realpath = ServletActionContext.getServletContext().getRealPath("/images");
-		String realpath = "G:\\Workspace\\WenZhai\\images";
-		System.out.println("realpath: " + realpath);
+		HttpServletRequest request = ServletActionContext.getRequest();
+		ServletContext servletContext = ServletActionContext.getServletContext();
+		request.getSession();
+		String path = request.getServletContext().getContextPath();
+		System.out.println(path);
+		System.out.println("path: " + path);
 		if (image != null) {
-			File savefile = new File(new File(realpath), imageFileName);
+			File savefile = new File(new File(path), imageFileName);
 			if (!savefile.getParentFile().exists())
 				savefile.getParentFile().mkdirs();
 			FileUtils.copyFile(image, savefile);

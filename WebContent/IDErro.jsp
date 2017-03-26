@@ -4,12 +4,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Login</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login Error</title>
+<link rel="stylesheet"
+	href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 </head>
 <body>
-<h1>Welcome to So-link Abstract system</h1>
+<h1 class="text-center">Welcome to So-link Abstract system</h1>
 <br>
-<div class="main">
+<div class="text-center">
 		<%String Note= null;
 if(request.getAttribute("FromFlag")!=null){
 Note = "No Erro Return";
@@ -29,22 +32,19 @@ else
 }
 	%>
     <form action="LoginAction.action" method="post" class="base_form">
-		<p>
-			<label>账号: </label>
-			<input type="text" name="phone" value="" /> 
+		<p class="text-center">
+			<label>UserID: &nbsp; &nbsp; &nbsp;</label>
+			<input type="text" name="phone" placeholder="Enter your UserID" /> 
 		</p>
-		<p>
-			<label>密码: </label>
-			<input type="password" name="password" value="" />	
+		<p class="text-center">
+			<label>Password: </label>
+			<input type="password" name="password" placeholder="Enter your password"  />	
 		</p>
-		<p> 
-			<input type="submit" value="登录" />
-		</p>
-		<p>
-
-		<h1><%= Note %></h1>
+		<p class="text-center" > 
+			<input type="submit" class="btn btn-primary" value="Login" />
 		</p>
     </form>
+
 </div>
 </body>
 </html>
