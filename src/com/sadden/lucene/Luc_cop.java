@@ -9,6 +9,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
@@ -84,7 +85,7 @@ public class Luc_cop {
 		      doc.add(new StringField("name", "lsup", Field.Store.YES));  
 		      doc.add(new StringField("email", emails[1], Field.Store.YES));  
 		      doc.add(new IntField("fileSize", fileSizes[1], Field.Store.YES));  
-		      doc.add(new TextField("content", contents[1], Field.Store.YES));  
+		      doc.add(new TextField("content", contents[1], Store.YES));  
 		        
 		      //更新的时候，会把原来那个索引删掉，重新生成一个索引  
 		      writer.updateDocument(term, doc);  
@@ -195,7 +196,7 @@ public class Luc_cop {
 		        Document doc = new Document();  
 		        doc.add(new StringField("id", ids[i], Field.Store.YES));  
 		        doc.add(new StringField("name", names[i], Field.Store.YES));  
-		        Field field = new TextField("email", emails[i], Field.Store.YES);  
+		        Field field = new TextField("email", emails[i], Store.YES);  
 		        doc.add(field);  
 		          
 		        //加权操作。qq邮箱2.0  新浪有限1.5  其他默认1.0 谷歌0.5  
@@ -212,7 +213,7 @@ public class Luc_cop {
 		          
 		        doc.add(new IntField("fileSize", fileSizes[i], Field.Store.YES));  
 		        //对于内容只索引不存储  
-		        doc.add(new TextField("content", contents[i], Field.Store.NO));  
+		        doc.add(new TextField("content", contents[i], Store.YES));  
 		        writer.addDocument(doc);  
 		      }  
 		      writer.commit();  

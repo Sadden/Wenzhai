@@ -67,7 +67,7 @@ public class OCR_function {
 			// ÎÄ×Ö½á¹û
 			result = sb.toString();
 			if (StringUtils.isNotBlank(result)) {
-				result = result.replaceAll(" ", "");
+			//	result = result.replaceAll(" ", "");
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

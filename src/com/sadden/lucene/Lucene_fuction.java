@@ -8,7 +8,9 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
@@ -38,52 +40,8 @@ public class Lucene_fuction {
 	public Picture pic_pre1;
 	public Picture pic_pre2;
 
-	public Lucene_fuction() {
-	}
 
-	public void createIndex() {
-		try {
-
-			if (writer == null) {
-				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
-				analyzer = new StandardAnalyzer();
-				config = new IndexWriterConfig(analyzer);
-				writer = new IndexWriter(directory, config);
-			}
-			// add init1
-			Document doc1 = new Document();
-			Document doc2 = new Document();
-
-			pic_pre1 = new Picture("Sadden", "pre1", "2017-3-21", "C:\\Users\\lenovo\\Desktop\\±ÏÉè\\²âÊÔÍ¼Æ¬\\1.jpg",
-					"tank");
-			pic_pre2 = new Picture("Sadden", "pre2", "2017-3-21", "C:\\Users\\lenovo\\Desktop\\±ÏÉè\\²âÊÔÍ¼Æ¬\\3.jpg", "man");
-			doc1.add(new StringField("UserID", pic_pre1.getUserId(), Field.Store.YES));
-			doc1.add(new StringField("PicID", pic_pre1.getPicId(), Field.Store.YES));
-			doc1.add(new StringField("Time", pic_pre1.getTime(), Field.Store.YES));
-			doc1.add(new StringField("URL", pic_pre1.getURL(), Field.Store.YES));
-			doc1.add(new StringField("tag", pic_pre1.getTag(), Field.Store.YES));
-			doc1.add(new StringField("Content", pic_pre1.getContent(), Field.Store.YES));
-
-			doc2.add(new StringField("UserID", pic_pre2.getUserId(), Field.Store.YES));
-			doc2.add(new StringField("PicID", pic_pre2.getPicId(), Field.Store.YES));
-			doc2.add(new StringField("Time", pic_pre2.getTime(), Field.Store.YES));
-			doc2.add(new StringField("URL", pic_pre2.getURL(), Field.Store.YES));
-			doc2.add(new StringField("tag", pic_pre2.getTag(), Field.Store.YES));
-			doc2.add(new StringField("Content", pic_pre2.getContent(), Field.Store.YES));
-
-			System.out.println(pic_pre1.getTag());
-			System.out.println(pic_pre2.getTag());
-
-			writer.addDocument(doc1);
-			writer.addDocument(doc2);
-
-			writer.commit();
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
+	
 	public void AddIndex(Picture pic) {
 		try {
 			if (writer == null) {
@@ -95,12 +53,12 @@ public class Lucene_fuction {
 			System.out.println("*************Add new picture**************");
 			pic.show();
 			Document doc = new Document();
-			doc.add(new StringField("UserID", pic.getUserId(), Field.Store.YES));
-			doc.add(new StringField("PicID", pic.getPicId(), Field.Store.YES));
-			doc.add(new StringField("Time", pic.getTime(), Field.Store.YES));
-			doc.add(new StringField("URL", pic.getURL(), Field.Store.YES));
-			doc.add(new StringField("tag", pic.getTag(), Field.Store.YES));
-			doc.add(new StringField("Content", pic.getContent(), Field.Store.YES));
+			doc.add(new StringField("UserID", pic.getUserId(), Store.YES));
+			doc.add(new StringField("PicID", pic.getPicId(), Store.YES));
+			doc.add(new StringField("Time", pic.getTime(), Store.YES));
+			doc.add(new StringField("URL", pic.getURL(), Store.YES));
+			doc.add(new TextField("tag", pic.getTag(), Store.YES));
+			doc.add(new TextField("Content", pic.getContent(), Store.YES));
 
 			writer.addDocument(doc);
 			writer.commit();
@@ -148,12 +106,11 @@ public class Lucene_fuction {
 			}
 			IndexSearcher searcher = new IndexSearcher(reader);
 			// ²éÑ¯ÄÄ¸ö×Ö¶Î
-			TermQuery query = new TermQuery(new Term("Content",Content));
-	//		QueryParser parse = new QueryParser("Content", analyzer);
+			QueryParser parse = new QueryParser("Content", analyzer);
 			// ²éÑ¯¹Ø¼ü×Ö
-	//		Query query = parse.parse(Content);
+			Query query = parse.parse(Content);
 			System.out.println("**************query:"+query);
-			TopDocs topDocs = searcher.search(query, 5);
+			TopDocs topDocs = searcher.search(query, 1000);
 			// Åö×²½á¹û query for socredoc[]
 			ScoreDoc[] hits = topDocs.scoreDocs;
 			if (hits.length == 0) {
@@ -208,7 +165,7 @@ public class Lucene_fuction {
 			QueryParser parse = new QueryParser("tag", analyzer);
 			// ²éÑ¯¹Ø¼ü×Ö
 			Query query = parse.parse(tag);
-			TopDocs topDocs = searcher.search(query, 5);
+			TopDocs topDocs = searcher.search(query, 1000);
 			// Åö×²½á¹û query for socredoc[]
 			ScoreDoc[] hits = topDocs.scoreDocs;
 			if (hits.length == 0) {
@@ -262,7 +219,7 @@ public class Lucene_fuction {
 			QueryParser parse = new QueryParser("UserID", analyzer);
 			// ²éÑ¯¹Ø¼ü×Ö
 			Query query = parse.parse(UserID);
-			TopDocs topDocs = searcher.search(query, 5);
+			TopDocs topDocs = searcher.search(query, 1000);
 			// Åö×²½á¹û query for socredoc[]
 			ScoreDoc[] hits = topDocs.scoreDocs;
 			if (hits.length == 0) {

@@ -64,10 +64,10 @@
 							value=<%=pic.getPicId()%> /> <input id="UserID" type="hidden"
 							name="UserID" value=<%=userId%> /> <input id="Time"
 							type="hidden" name="Time" value=<%=Time%> /> <input id="Tag"
-							type="hidden" name="Tag" value=<%=Tag%> /> <input id="Content"
-							type="hidden" name="Content" value=<%=Content%> /> <input
+							type="hidden" name="Tag" value=<%=Tag.replaceAll(" ","&nbsp;")%> /> <input id="Content"
+							type="hidden" name="Content" value=<%=Content.replaceAll(" ","&nbsp;")%> /> <input
 							id="URL" type="hidden" name="URL" value=<%=URL%> /> <input
-							type="submit" class="btn btn-warning" value="ToUpdate" />
+							type="submit" class="btn btn-warning" value="ToUpdate"/>
 					</form>
 				</td>
 			</tr>
