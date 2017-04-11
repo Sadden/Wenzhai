@@ -15,17 +15,20 @@
   
   
   <welcome-file-list>
-    <welcome-file>login.jsp</welcome-file>
+    <welcome-file>DLogin.html</welcome-file>
   </welcome-file-list>
+  
+  
+  
    <servlet>
-    <description>This is the description of my J2EE component</description>
+    <description>This is the signature of weixin</description>
     <display-name>This is the display name of my J2EE component</display-name>
     <servlet-name>LoginServlet</servlet-name>
-    <servlet-class>sadden.wenzhai.servlet.Login</servlet-class>
+    <servlet-class>sadden.wenzhai.servlet.WeixinSignatureIdendtified</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>LoginServlet</servlet-name>
-    <url-pattern>/servlet/Login</url-pattern>
+    <url-pattern>/servlet/signature</url-pattern>
   </servlet-mapping>
   
     <servlet>
