@@ -1,25 +1,65 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html >
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Test camera </title>
+<title>Test camera</title>
+<style>  
+video {  
+    border: 1px solid #ccc;  
+    display: block;  
+    margin: 0 0 20px 0;  
+    float:left;  
+}  
+#canvas {  
+    margin-top: 20px;  
+    border: 1px solid #ccc;  
+    display: block;  
+}  
+</style>  
 </head>
 <body>
-<video id="video" autoplay=""style='width:640px;height:480px'></video>
-<button id='picture'>PICTURE</button> 
-<canvas id="canvas" width="640" height="480"></canvas>
-<script type="text/javascript">
-var video = document.getElementById("video");
-var context = canvas.getContext("2d")
-var errocb = function () {
-                          console.log('sth wrong!');
-                     }
-
-
-
-</script>
+	<video id="video" width="500" height="400" autoplay></video>  
+    <canvas id="canvas" width="500" height="400"></canvas>  
+    <button id="snap">拍照</button>  
+    <script type="text/javascript">  
+        var context = canvas.getContext("2d");  
+        //当DOM树构建完成的时候就会执行DOMContentLoaded事件  
+        window.addEventListener("DOMContentLoaded", function() {  
+            //获得Canvas对象  
+            var canvas = document.getElementById("canvas");  
+            //获得video摄像头区域  
+            var video = document.getElementById("video");  
+            var videoObj = {  
+                "video" : true  
+            };  
+            var errBack = function(error) {  
+                console.log("Video capture error: ", error.code);  
+            };  
+            //获得摄像头并显示到video区域  
+            if (navigator.getUserMedia) { // Standard  
+                navigator.getUserMedia(videoObj, function(stream) {  
+                    video.src = stream;  
+                    video.play();  
+                }, errBack);  
+            } else if (navigator.webkitGetUserMedia) { // WebKit-prefixed  
+                navigator.webkitGetUserMedia(videoObj, function(stream) {  
+                    video.src = window.webkitURL.createObjectURL(stream);  
+                    video.play();  
+                }, errBack);  
+            } else if (navigator.mozGetUserMedia) { // Firefox-prefixed  
+                navigator.mozGetUserMedia(videoObj, function(stream) {  
+                    video.src = window.URL.createObjectURL(stream);  
+                    video.play();  
+                }, errBack);  
+            }  
+        }, false);  
+        // 触发拍照动作  
+        document.getElementById("snap").addEventListener("click", function() {  
+            context.drawImage(video, 0, 0, 640, 480);  
+        });  
+    </script>  
 
 </body>
 </html>

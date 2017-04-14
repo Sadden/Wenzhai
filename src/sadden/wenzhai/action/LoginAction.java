@@ -44,20 +44,10 @@ public class LoginAction extends ActionSupport {
 		ServletContext servletContext = ServletActionContext.getServletContext();
 		request.getSession();
 		HttpServletResponse response = ServletActionContext.getResponse();
-		//if the user is an administer
-		if (phone.equals("1") && password.equals("1")) {
-			System.out.println("into admin");
-			return "admin";
-		}
-		else {
-			// wrong password
-//			HttpServletResponse response = ServletActionContext.getResponse();
-//			PrintWriter out = response.getWriter();
-			System.out.println("ID or password erro");
-			String flag = "IDErro";
-			request.setAttribute("FromFlag", flag);
-			return "IDErro";
-		}
+		
+		System.out.println("into admin");
+		return "admin";
+		
 	}
 	public String Login() {
 		// TODO Auto-generated constructor stub

@@ -23,15 +23,14 @@
 </action>
  -->
 <action name = "LoginAction"  class = "sadden.wenzhai.action.LoginAction">
- <result name = "admin">/admin_index.jsp</result>
+ <result name = "admin">/D_admin_index.jsp</result>
 <result name = "IDErro">/IDErro.jsp </result>
 </action>
-<action name = "SearchAction"  class = "sadden.wenzhai.action.SearchAction">
- <result name = "NoTag">/IDErro.jsp</result>
-<result name = "Result">/admin_result.jsp</result>
+<action name = "To_SearchAction_Tag"  method= "ToSearchTag" class = "sadden.wenzhai.action.SearchAction">
+ <result name = "Success">/SearchTag.jsp</result>
 </action>
 
-<action name = "SearchAction"  class = "sadden.wenzhai.action.SearchAction">
+<action name = "SearchAction_Tag"  method= "SearchTag" class = "sadden.wenzhai.action.SearchAction">
  <result name = "NoTag">/IDErro.jsp</result>
 <result name = "Result">/admin_result.jsp</result>
 </action>
@@ -45,10 +44,12 @@
  <result name = "ToAddSuccess">/AddSuccess.jsp</result>
 </action>
 
-<action name = "SearchAction_Content"   class = "sadden.wenzhai.action.SearchAction_Content">
+<action name = "SearchAction_Content"   method= "SearchContent" class = "sadden.wenzhai.action.SearchAction_Content">
  <result name = "Content_Result">/admin_result.jsp</result>
 </action>
-
+<action name = "To_SearchAction_Content"  method="ToSearchContent" class = "sadden.wenzhai.action.SearchAction_Content">
+ <result name = "Success">/SearchContent.jsp</result>
+</action>
 <action name = "SearchAction_UserID"   class = "sadden.wenzhai.action.SearchAction_UserID">
  <result name = "UserID_Result">/admin_result.jsp</result>
 </action>

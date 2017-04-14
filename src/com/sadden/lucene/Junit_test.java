@@ -26,17 +26,30 @@ public class Junit_test {
 	@Test 
 	public void luc_cop()
 	{
-	//	Lucene_fuction luc = new Lucene_fuction();
-	//	luc.delete_tag("man");
-	//	luc.readIndex();
-		
-		Luc_cop luc =new Luc_cop();
-		luc.queryIndex();
-		
+		String s="adb是收到的we1对方23";
+		System.out.println(s);
+		String n = WashOutCH(s);
+		System.out.println(n);
 		
 	}
 	
 	
+	public String WashOutCH(String OcrResult)
+	{
+		String FinResult = null;
+	    int n = 0;
+	    for(int i = 0; i < OcrResult.length(); i++) {
+	        n = (int)OcrResult.charAt(i);
+	        if(19968 <= n && n <40869) {
+	        	//the nth character in string is Chinese
+	            OcrResult=OcrResult.substring(0, i)+OcrResult.substring(i+1);
+	            i--;
+	        }
+	    }
+		FinResult = OcrResult;
+		
+		return FinResult;
+	}
 	
 	
 	@After

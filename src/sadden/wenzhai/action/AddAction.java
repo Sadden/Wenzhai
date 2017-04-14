@@ -22,9 +22,9 @@ public class AddAction extends ActionSupport {
 	String Time;
 	String URL;
 	String Tag;
-	private File image; // 上传的文件
-	private String imageFileName; // 文件名称
-	private String imageContentType; // 文件类型
+	private File image; // upload picture file
+	private String imageFileName; 
+	private String imageContentType; 
 		
 	/**
 	 * from admin_index.jsp tp AddNew.jsp
@@ -50,10 +50,11 @@ public class AddAction extends ActionSupport {
 //		String path = request.getServletContext().getContextPath()+"/images";
 		UploadPicture(path);
 		URL = imageFileName;
-		System.out.println("URL:"+URL);
+		System.out.println("**************URL:"+URL);
 		Picture pic  =new Picture(UserID, URL, Tag);
 		
 		String content = DoOCR(path+"/"+URL);
+		content = WashOutCH(content);
 		pic.setContent(content);
 		
 		Lucene_fuction luc = new Lucene_fuction();
@@ -73,10 +74,30 @@ public class AddAction extends ActionSupport {
 	{
 		String Result = null;
 		OCR_function ocr = new OCR_function();
-		Result = ocr.ReadPicture(realpath, 0);
+		Result = ocr.ReadPicture(realpath, 0);		
 		return Result;
 	}
 	
+	/**
+	 * this function for wash out the chinese character in the ocr content
+	 * @param OcrResult 
+	 * @return FinResult
+	 */
+	public String WashOutCH(String OcrResult)
+	{
+		String FinResult = null;
+	    int n = 0;
+	    for(int i = 0; i < OcrResult.length(); i++) {
+	        n = (int)OcrResult.charAt(i);
+	        if(19968 <= n && n <40869) {
+	        	//the nth character in string is Chinese
+	            OcrResult=OcrResult.substring(0, i)+OcrResult.substring(i+1);
+	            i--;
+	        }
+	    }
+		FinResult = OcrResult;		
+		return FinResult;
+	}
 	
 	/**
 	 * upload a picture in G:/workspace path
@@ -92,7 +113,7 @@ public class AddAction extends ActionSupport {
 			if (!savefile.getParentFile().exists())
 				savefile.getParentFile().mkdirs();
 			FileUtils.copyFile(image, savefile);
-			ActionContext.getContext().put("message", "文件上传成功");
+			ActionContext.getContext().put("message", "upload successfully");
 		}
 	}
 	

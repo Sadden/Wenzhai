@@ -17,9 +17,12 @@ public class SearchAction_Content extends ActionSupport {
 	String flag;// in order to control jsp
 	Lucene_fuction luc;//for manipulate lucene function
 	
-	@Override
-	public String execute() throws Exception {
-		// TODO Auto-generated method stub
+	/**
+	 * search Content
+	 * @return
+	 */
+	public String SearchContent()
+	{
 		System.out.println("Content:" + Content);
 		luc = new Lucene_fuction();
 		HttpServletRequest request = ServletActionContext.getRequest();
@@ -34,7 +37,14 @@ public class SearchAction_Content extends ActionSupport {
 			return "Content_Result";
 	}
 	
-	
+	/**
+	 * jump to searchContent page
+	 * @return
+	 */
+	public String ToSearchContent()
+	{
+		return "Success";
+	}
 	
 	
 	

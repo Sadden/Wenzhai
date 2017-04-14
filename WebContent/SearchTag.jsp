@@ -1,10 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@  page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
 <head lang="en">
 <meta charset="UTF-8">
-<title>Add Successfully</title>
+<title>Search Tag</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="format-detection" content="telephone=no">
@@ -153,23 +152,24 @@
 <div id='stars2'></div>
 <div id='stars3'></div>
 
-	<div class="am-g" style="margin-top:20%">
-  <div class="am-u-lg-6 am-u-md-8 am-u-sm-centered text-center">
-  <font size="8" color="white">Add Successfully</font>
-    <form action="ToAddAction.action" method="post" class="am-form text-center" style="margin-top:7%">
-    <input type="submit" class="btn btn-info" value="add more"/>
-    </form>
-    
-    <form action="D_admin_index.jsp" method="post" class="am-form text-center" style="margin-top:5%">
-    <input type="submit" class="btn btn-info" value="return"/>
+	
+<div class="am-g" style="margin-top:20%">
+  <div class="am-u-lg-6 am-u-md-8 am-u-sm-centered">
+    <form action="SearchAction_Tag.action" method="post" class="am-form">
+    <br>
+    <font size="8" color="white">Search Tag</font>
+    <br>
+      <input type="text" name="tag" id="password" value="">
+      <br>
+      <div class="text-center">
+      <input type="submit" class="btn btn-info" value="Search" height="20"  />
+      </div>
+      
     </form>
   </div>
 </div>
-
-
-
-    
-    
-</div>
+	
+     <script src='http://www.5iweb.com.cn/statics/js/jquery.1.7.1.min.js'></script>
+    <script src="js/inputshine/index.js"></script>   
 </body>
 </html>

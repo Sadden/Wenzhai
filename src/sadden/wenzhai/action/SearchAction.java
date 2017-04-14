@@ -12,16 +12,16 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.sadden.lucene.Lucene_fuction;
 import com.sadden.lucene.Picture;
 
-
 public class SearchAction extends ActionSupport {
 
 	String tag;
 	String flag;// in order to control jsp
-	Lucene_fuction luc;//for manipulate lucene function
-	public SearchAction()
-	{
-		
+	Lucene_fuction luc;// for manipulate lucene function
+
+	public SearchAction() {
+
 	}
+
 	public String getTag() {
 		return tag;
 	}
@@ -30,9 +30,9 @@ public class SearchAction extends ActionSupport {
 		this.tag = tag;
 	}
 
-	@Override
-	public String execute() throws Exception {
-		// TODO Auto-generated method stub
+	
+	public String SearchTag()
+	{
 		System.out.println("tag:" + tag);
 		luc = new Lucene_fuction();
 		HttpServletRequest request = ServletActionContext.getRequest();
@@ -41,19 +41,29 @@ public class SearchAction extends ActionSupport {
 		HttpServletResponse response = ServletActionContext.getResponse();
 		// if the tag is empty
 		if (tag.equals("0")) {
-			
+
 			flag = "NoTag";
 			System.out.println("tag is 0, return to IDErro");
 			request.setAttribute("FromFlag", flag);
 			return "NoTag";
-			
+
 		} else {
 			ArrayList<Picture> PicList = new ArrayList<>();
 			PicList = luc.queryIndex_Tag(tag);
 			request.setAttribute("PictureList", PicList);
 			return "Result";
 		}
-
 	}
+	
+	
+	/**
+	 * jump to search tag function
+	 * @return
+	 */
+	public String ToSearchTag()
+	{
+		return "Success";
+	}
+	
 
 }

@@ -21,11 +21,15 @@ public class SearchAction_UserID extends ActionSupport {
 	public String execute() throws Exception {
 		// TODO Auto-generated method stub
 
+		
 		HttpServletRequest request = ServletActionContext.getRequest();
 		ServletContext servletContext = ServletActionContext.getServletContext();
 		request.getSession();
 		HttpServletResponse response = ServletActionContext.getResponse();
 
+		
+		//for test I set UserID as sadden
+		UserID="sadden";
 		System.out.println("Search UserID:" + UserID);
 		luc = new Lucene_fuction();
 		ArrayList<Picture> PicList = new ArrayList<>();

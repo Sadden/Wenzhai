@@ -72,7 +72,7 @@
 				</td>
 			</tr>
 			<tr>
-				<img
+				<img height="60%" width="60%"
 					src="<%=request.getServletContext().getContextPath()+"/images/"+URL%>" />
 			</tr>
 			<%
