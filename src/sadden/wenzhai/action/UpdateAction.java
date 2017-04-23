@@ -1,5 +1,7 @@
 package sadden.wenzhai.action;
 
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
@@ -20,12 +22,22 @@ public class UpdateAction extends ActionSupport {
 	
 	public String ToUpdate()
 	{
+	
 		PicID=PicID.replaceAll("/","");
-		UserID=UserID.replaceAll("/","");
-		Time=Time.replaceAll("/","");
-		Tag=Tag.replaceAll("/","");
-		Content=Content.replaceAll("/","");
-		URL=URL.replaceAll("/","");
+		
+		Lucene_fuction luc =new Lucene_fuction();
+		ArrayList<Picture> piclist = luc.queryIndex_PicID(PicID);
+		for (Picture pic : piclist)
+		{
+			UserID=pic.getUserId();
+			Time=pic.getTime();
+			Tag=pic.getTag();
+			Content=pic.getContent();
+			URL=pic.getURL();
+		}
+		
+		
+
 		
 		System.out.println("to update: PicID="+PicID);
 		Picture pic = new Picture(UserID, PicID, Time, URL, Tag);
@@ -48,7 +60,7 @@ public class UpdateAction extends ActionSupport {
 		pic.setContent(Content);
 		System.out.println("******************now update****************");
 		pic.show();
-		luc.update_PicID(PicID, pic);
+		luc.update_PicID2(PicID, pic);
 		
 		return "UpdateOK";
 	}

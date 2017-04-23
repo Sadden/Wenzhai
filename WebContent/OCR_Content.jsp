@@ -18,8 +18,8 @@ import="com.sadden.lucene.*"
 	<!-- ${pageContext.request.contextPath}/upload/execute_upload.do -->
 	<!-- ${pageContext.request.contextPath}/upload2/upload2.do -->
 	<div class="main" align="center">
-	<%if(request.getAttribute("ViewPicture")!=null){
-		Picture pic=(Picture)request.getAttribute("ViewPicture");
+	<%if(request.getAttribute("Picture")!=null){
+		Picture pic=(Picture)request.getAttribute("Picture");
 		if(pic!=null)
 		{
 			

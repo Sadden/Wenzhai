@@ -32,7 +32,7 @@
 
 <action name = "SearchAction_Tag"  method= "SearchTag" class = "sadden.wenzhai.action.SearchAction">
  <result name = "NoTag">/IDErro.jsp</result>
-<result name = "Result">/admin_result.jsp</result>
+<result name = "Result">/D_admin_result.jsp</result>
 </action>
 <action name = "ToAddAction"   method= "ToAdd" class = "sadden.wenzhai.action.AddAction">
  <result name = "ToAdd">/AddNew.jsp</result>
@@ -45,25 +45,25 @@
 </action>
 
 <action name = "SearchAction_Content"   method= "SearchContent" class = "sadden.wenzhai.action.SearchAction_Content">
- <result name = "Content_Result">/admin_result.jsp</result>
+ <result name = "Content_Result">/D_admin_result.jsp</result>
 </action>
 <action name = "To_SearchAction_Content"  method="ToSearchContent" class = "sadden.wenzhai.action.SearchAction_Content">
  <result name = "Success">/SearchContent.jsp</result>
 </action>
 <action name = "SearchAction_UserID"   class = "sadden.wenzhai.action.SearchAction_UserID">
- <result name = "UserID_Result">/admin_result.jsp</result>
+ <result name = "UserID_Result">/D_admin_result.jsp</result>
 </action>
 
 <action name = "Delete"   method= "DeleteIndex"  class = "sadden.wenzhai.action.DeleteAction">
- <result name = "DeleteOK">/admin_index.jsp</result>
+ <result name = "DeleteOK">/D_admin_index.jsp</result>
 </action>
 
 <action name = "ToUpdate"   method= "ToUpdate"  class = "sadden.wenzhai.action.UpdateAction">
- <result name = "ToUpdate">/Update.jsp</result>
+ <result name = "ToUpdate">/D_Update.jsp</result>
 </action>
 
 <action name = "Update"   method= "Update"  class = "sadden.wenzhai.action.UpdateAction">
- <result name = "UpdateOK">/admin_index.jsp</result>
+ <result name = "UpdateOK">/D_admin_index.jsp</result>
 </action>
 
 

@@ -22,6 +22,8 @@ public class AddAction extends ActionSupport {
 	String Time;
 	String URL;
 	String Tag;
+	String Language;
+	
 	private File image; // upload picture file
 	private String imageFileName; 
 	private String imageContentType; 
@@ -41,6 +43,7 @@ public class AddAction extends ActionSupport {
 	 */
 	public String AddPic() throws Exception
 	{
+		System.out.println("use  "+Language+"  as language");
 		//upload path
 		HttpServletRequest request = ServletActionContext.getRequest();
 		ServletContext servletContext = ServletActionContext.getServletContext();
@@ -50,17 +53,23 @@ public class AddAction extends ActionSupport {
 //		String path = request.getServletContext().getContextPath()+"/images";
 		UploadPicture(path);
 		URL = imageFileName;
-		System.out.println("**************URL:"+URL);
+		System.out.println("**************URL:"+path+URL);
 		Picture pic  =new Picture(UserID, URL, Tag);
 		
 		String content = DoOCR(path+"/"+URL);
-		content = WashOutCH(content);
+		if(!Language.equals("ch"))
+		{
+			System.out.println("wash out Chinese");
+			content = WashOutCH(content);
+		}
+		
 		pic.setContent(content);
 		
+		//add the picture into index
 		Lucene_fuction luc = new Lucene_fuction();
-		luc.AddIndex(pic);
+		luc.AddIndex2(pic);
 		
-		request.setAttribute("ViewPicture", pic);
+		request.setAttribute("Picture", pic);
 		
 		return "AddSuccess";
 	}
@@ -74,7 +83,16 @@ public class AddAction extends ActionSupport {
 	{
 		String Result = null;
 		OCR_function ocr = new OCR_function();
-		Result = ocr.ReadPicture(realpath, 0);		
+		int flag = 0;
+		if(Language.equals("ch"))
+		{
+			// use Chinese
+			flag = 1;
+		}
+		
+		
+		
+		Result = ocr.ReadPicture(realpath, flag);		
 		return Result;
 	}
 	
@@ -180,6 +198,14 @@ public class AddAction extends ActionSupport {
 
 	public void setImageContentType(String imageContentType) {
 		this.imageContentType = imageContentType;
+	}
+
+	public String getLanguage() {
+		return Language;
+	}
+
+	public void setLanguage(String language) {
+		Language = language;
 	}
 	
 }

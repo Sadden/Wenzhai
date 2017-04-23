@@ -8,14 +8,17 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexOptions;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
@@ -25,6 +28,8 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+
+import sadden.wenzahi.IK.MyIKAnalyzer;
 
 public class Lucene_fuction {
 	public Directory directory;
@@ -41,7 +46,10 @@ public class Lucene_fuction {
 	public Picture pic_pre2;
 
 
-	
+	/**
+	 * Add a new picture into lucene index.
+	 * @param pic the new picture
+	 */
 	public void AddIndex(Picture pic) {
 		try {
 			if (writer == null) {
@@ -53,8 +61,8 @@ public class Lucene_fuction {
 			System.out.println("*************Add new picture**************");
 			pic.show();
 			Document doc = new Document();
-			doc.add(new StringField("UserID", pic.getUserId(), Store.YES));
-			doc.add(new StringField("PicID", pic.getPicId(), Store.YES));
+			doc.add(new TextField("UserID", pic.getUserId(), Store.YES));
+			doc.add(new TextField("PicID", pic.getPicId(), Store.YES));
 			doc.add(new StringField("Time", pic.getTime(), Store.YES));
 			doc.add(new StringField("URL", pic.getURL(), Store.YES));
 			doc.add(new TextField("tag", pic.getTag(), Store.YES));
@@ -68,8 +76,56 @@ public class Lucene_fuction {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * use IKAnalyzer to add index
+	 * @param pic
+	 */
+	public void AddIndex2(Picture pic) {
+		try {
+			if (writer == null) {
+				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
+				Analyzer smcAnalyzer = new MyIKAnalyzer();
+				config = new IndexWriterConfig(smcAnalyzer);
+				writer = new IndexWriter(directory, config);
+			}
+			System.out.println("*************Add new picture**************");
+			pic.show();
+			Document doc = new Document();
+			doc.add(new TextField("UserID", pic.getUserId(), Store.YES));
+			doc.add(new TextField("PicID", pic.getPicId(), Store.YES));
+			doc.add(new StringField("Time", pic.getTime(), Store.YES));
+			doc.add(new StringField("URL", pic.getURL(), Store.YES));
+			doc.add(new TextField("tag", pic.getTag(), Store.YES));
+			
+	        // æ–°å»ºFieldType,ç”¨äºæŒ‡å®šå­—æ®µç´¢å¼•æ—¶çš„ä¿¡æ¯
+	        FieldType type = new FieldType();
+	        // ç´¢å¼•æ—¶ä¿å­˜æ–‡æ¡£ã€è¯é¡¹é¢‘ç‡ã€ä½ç½®ä¿¡æ¯ã€åç§»ä¿¡æ¯
+	        type.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
+	        type.setStored(true);// åŸå§‹å­—ç¬¦ä¸²å…¨éƒ¨è¢«ä¿å­˜åœ¨ç´¢å¼•ä¸­
+	        type.setStoreTermVectors(true);// å­˜å‚¨è¯é¡¹é‡
+	        type.setTokenized(true);// è¯æ¡åŒ–
+	        
+			doc.add(new Field("Content", pic.getContent(), type));
 
-	// list all index
+			writer.addDocument(doc);
+			writer.commit();
+			writer.close();
+			directory.close();
+			System.out.println("writer closed");
+			
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+
+	/**
+	 * read all the index in lucene
+	 */
 	public void readIndex() {
 		try {
 			if (reader == null) {
@@ -79,7 +135,7 @@ public class Lucene_fuction {
 			}
 			System.out.println("max num:" + reader.maxDoc());
 			System.out.println("index num:" + reader.numDocs());
-			// É¾³ıÁËµÄË÷ÒıÊı
+			// É¾ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			System.out.println("delete index num:" + reader.numDeletedDocs());
 			reader.close();
 		} catch (IOException e) {
@@ -105,13 +161,13 @@ public class Lucene_fuction {
 				reader = DirectoryReader.open(directory);
 			}
 			IndexSearcher searcher = new IndexSearcher(reader);
-			// ²éÑ¯ÄÄ¸ö×Ö¶Î
+			// ï¿½ï¿½Ñ¯ï¿½Ä¸ï¿½ï¿½Ö¶ï¿½
 			QueryParser parse = new QueryParser("Content", analyzer);
-			// ²éÑ¯¹Ø¼ü×Ö
+			// ï¿½ï¿½Ñ¯ï¿½Ø¼ï¿½ï¿½ï¿½
 			Query query = parse.parse(Content);
 			System.out.println("**************query:"+query);
 			TopDocs topDocs = searcher.search(query, 1000);
-			// Åö×²½á¹û query for socredoc[]
+			// ï¿½ï¿½×²ï¿½ï¿½ï¿½ query for socredoc[]
 			ScoreDoc[] hits = topDocs.scoreDocs;
 			if (hits.length == 0) {
 				System.out.println("no result");
@@ -121,17 +177,17 @@ public class Lucene_fuction {
 				for (int i = 0; i < hits.length; i++) {
 					// build for each scoredoc
 					ScoreDoc hit = hits[i];
-					 // È¡¶ÔÏódocumentµÄ¶ÔÏóid
+					 // È¡ï¿½ï¿½ï¿½ï¿½documentï¿½Ä¶ï¿½ï¿½ï¿½id
 		            int docID = hit.doc;
 
-		            // Ïà¹Ø¶ÈµÃ·Ö
+		            // ï¿½ï¿½Ø¶ÈµÃ·ï¿½
 		            float score = hit.score;
 		            
 		            System.out.println("ID:"+docID);
 		            System.out.println("score:"+score);
 					// get the doc from each scoredoc
 					Document hitDoc = searcher.doc(hit.doc);
-					// ½á¹û°´ÕÕµÃ·ÖÀ´ÅÅĞò¡£Ö÷ÒªÓÉ ¹Ø¼ü×ÖµÄ¸öÊıºÍÈ¨ÖµÀ´¾ö¶¨
+					// ï¿½ï¿½ï¿½ï¿½ÕµÃ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ ï¿½Ø¼ï¿½ï¿½ÖµÄ¸ï¿½ï¿½ï¿½ï¿½È¨Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 					showResult(hit, hitDoc);
 					addResult(hit, hitDoc, PicList);
 				}
@@ -152,7 +208,7 @@ public class Lucene_fuction {
 	public ArrayList<Picture> queryIndex_Tag(String tag) {
 		ArrayList<Picture> PicList = new ArrayList<>();
 		try {
-			// ËÑË÷Æ÷
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			// IndexSearcher searcher = getSearcher();
 			analyzer = new StandardAnalyzer();
 			if (reader == null) {
@@ -161,12 +217,12 @@ public class Lucene_fuction {
 				reader = DirectoryReader.open(directory);
 			}
 			IndexSearcher searcher = new IndexSearcher(reader);
-			// ²éÑ¯ÄÄ¸ö×Ö¶Î
+			// ï¿½ï¿½Ñ¯ï¿½Ä¸ï¿½ï¿½Ö¶ï¿½
 			QueryParser parse = new QueryParser("tag", analyzer);
-			// ²éÑ¯¹Ø¼ü×Ö
+			// ï¿½ï¿½Ñ¯ï¿½Ø¼ï¿½ï¿½ï¿½
 			Query query = parse.parse(tag);
 			TopDocs topDocs = searcher.search(query, 1000);
-			// Åö×²½á¹û query for socredoc[]
+			// ï¿½ï¿½×²ï¿½ï¿½ï¿½ query for socredoc[]
 			ScoreDoc[] hits = topDocs.scoreDocs;
 			if (hits.length == 0) {
 				System.out.println("no result");
@@ -178,7 +234,55 @@ public class Lucene_fuction {
 					ScoreDoc hit = hits[i];
 					// get the doc from each scoredoc
 					Document hitDoc = searcher.doc(hit.doc);
-					// ½á¹û°´ÕÕµÃ·ÖÀ´ÅÅĞò¡£Ö÷ÒªÓÉ ¹Ø¼ü×ÖµÄ¸öÊıºÍÈ¨ÖµÀ´¾ö¶¨
+					// ï¿½ï¿½ï¿½ï¿½ÕµÃ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ ï¿½Ø¼ï¿½ï¿½ÖµÄ¸ï¿½ï¿½ï¿½ï¿½È¨Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+					showResult(hit, hitDoc);
+					addResult(hit, hitDoc, PicList);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		try {
+			reader.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return PicList;
+	}
+
+	
+	public ArrayList<Picture> queryIndex_PicID(String PicID) {
+		ArrayList<Picture> PicList = new ArrayList<>();
+		try {
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			// IndexSearcher searcher = getSearcher();
+			analyzer = new StandardAnalyzer();
+			if (reader == null) {
+				System.out.println("reader is null, new reader");
+				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
+				reader = DirectoryReader.open(directory);
+			}
+			IndexSearcher searcher = new IndexSearcher(reader);
+			// ï¿½ï¿½Ñ¯ï¿½Ä¸ï¿½ï¿½Ö¶ï¿½
+			QueryParser parse = new QueryParser("PicID", analyzer);
+			// ï¿½ï¿½Ñ¯ï¿½Ø¼ï¿½ï¿½ï¿½
+			Query query = parse.parse(PicID);
+			TopDocs topDocs = searcher.search(query, 1000);
+			// ï¿½ï¿½×²ï¿½ï¿½ï¿½ query for socredoc[]
+			ScoreDoc[] hits = topDocs.scoreDocs;
+			if (hits.length == 0) {
+				System.out.println("no result");
+				reader.close();
+				return PicList;
+			} else {
+				for (int i = 0; i < hits.length; i++) {
+					// build for each scoredoc
+					ScoreDoc hit = hits[i];
+					// get the doc from each scoredoc
+					Document hitDoc = searcher.doc(hit.doc);
 					showResult(hit, hitDoc);
 					addResult(hit, hitDoc, PicList);
 				}
@@ -199,6 +303,10 @@ public class Lucene_fuction {
 
 	
 	
+	
+	
+	
+	
 	/**
 	 * query index in UserID
 	 * 
@@ -215,12 +323,12 @@ public class Lucene_fuction {
 				reader = DirectoryReader.open(directory);
 			}
 			IndexSearcher searcher = new IndexSearcher(reader);
-			// ²éÑ¯ÄÄ¸ö×Ö¶Î
+			// ï¿½ï¿½Ñ¯ï¿½Ä¸ï¿½ï¿½Ö¶ï¿½
 			QueryParser parse = new QueryParser("UserID", analyzer);
-			// ²éÑ¯¹Ø¼ü×Ö
+			// ï¿½ï¿½Ñ¯ï¿½Ø¼ï¿½ï¿½ï¿½
 			Query query = parse.parse(UserID);
 			TopDocs topDocs = searcher.search(query, 1000);
-			// Åö×²½á¹û query for socredoc[]
+			// ï¿½ï¿½×²ï¿½ï¿½ï¿½ query for socredoc[]
 			ScoreDoc[] hits = topDocs.scoreDocs;
 			if (hits.length == 0) {
 				System.out.println("no result");
@@ -233,7 +341,7 @@ public class Lucene_fuction {
 					// get the doc from each scoredoc
 					Document hitDoc = searcher.doc(hit.doc);
 					
-					// ½á¹û°´ÕÕµÃ·ÖÀ´ÅÅĞò¡£Ö÷ÒªÓÉ ¹Ø¼ü×ÖµÄ¸öÊıºÍÈ¨ÖµÀ´¾ö¶¨
+					// ï¿½ï¿½ï¿½ï¿½ÕµÃ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ ï¿½Ø¼ï¿½ï¿½ÖµÄ¸ï¿½ï¿½ï¿½ï¿½È¨Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 					showResult(hit, hitDoc);
 					addResult(hit, hitDoc, PicList);
 				}
@@ -285,7 +393,7 @@ public class Lucene_fuction {
 	}
 
 	/**
-	 * Ë÷ÒıÈ«²¿É¾³ı
+	 * ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½É¾ï¿½ï¿½
 	 */
 	public void deleteAllIndex() {
 		try {
@@ -367,7 +475,7 @@ public class Lucene_fuction {
 			doc.add(new StringField("tag", newpic.getTag(), Field.Store.YES));
 			doc.add(new StringField("Content", newpic.getContent(), Field.Store.YES));
 
-			// ¸üĞÂµÄÊ±ºò£¬»á°ÑÔ­À´ÄÇ¸öË÷ÒıÉ¾µô£¬ÖØĞÂÉú³ÉÒ»¸öË÷Òı
+			// ï¿½ï¿½ï¿½Âµï¿½Ê±ï¿½ò£¬»ï¿½ï¿½Ô­ï¿½ï¿½ï¿½Ç¸ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			writer.updateDocument(term, doc);
 			writer.commit();
 			writer.close();
@@ -375,5 +483,56 @@ public class Lucene_fuction {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * update the picture with IKAnalyzer
+	 * @param PicID
+	 * to find original picture
+	 * @param newpic
+	 * new picture 
+	 */
+	public void update_PicID2(String PicID, Picture newpic) {
+		try {
+			if (writer == null) {
+				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
+				Analyzer smcAnalyzer = new MyIKAnalyzer();
+				config = new IndexWriterConfig(smcAnalyzer);
+				writer = new IndexWriter(directory, config);
+			}
+			Term term = new Term("PicID", PicID);
+			Document doc = new Document();
+			doc.add(new StringField("UserID", newpic.getUserId(), Field.Store.YES));
+			doc.add(new StringField("PicID", newpic.getPicId(), Field.Store.YES));
+			doc.add(new StringField("Time", newpic.getTime(), Field.Store.YES));
+			doc.add(new StringField("URL", newpic.getURL(), Field.Store.YES));
+			doc.add(new StringField("tag", newpic.getTag(), Field.Store.YES));
+			
+			  // æ–°å»ºFieldType,ç”¨äºæŒ‡å®šå­—æ®µç´¢å¼•æ—¶çš„ä¿¡æ¯
+	        FieldType type = new FieldType();
+	        // ç´¢å¼•æ—¶ä¿å­˜æ–‡æ¡£ã€è¯é¡¹é¢‘ç‡ã€ä½ç½®ä¿¡æ¯ã€åç§»ä¿¡æ¯
+	        type.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
+	        type.setStored(true);// åŸå§‹å­—ç¬¦ä¸²å…¨éƒ¨è¢«ä¿å­˜åœ¨ç´¢å¼•ä¸­
+	        type.setStoreTermVectors(true);// å­˜å‚¨è¯é¡¹é‡
+	        type.setTokenized(true);// è¯æ¡åŒ–
+	        
+			doc.add(new Field("Content", newpic.getContent(), type));
+			
+			// ï¿½ï¿½ï¿½Âµï¿½Ê±ï¿½ò£¬»ï¿½ï¿½Ô­ï¿½ï¿½ï¿½Ç¸ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			writer.updateDocument(term, doc);
+			writer.commit();
+			writer.close();
+			directory.close();
+			System.out.println("update writer closed");
+			
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
+	
+	
+	
+	
+	
 }

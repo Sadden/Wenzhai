@@ -27,7 +27,8 @@ public class OCR_function {
 			OcrLangData = "-l eng";
 		} else {
 			System.out.println("in Chinese");
-			OcrLangData = "-l chi_sim";
+//			OcrLangData = "-l chi_sim";
+			OcrLangData = "-l New1";
 		}
 		String OcrCommand = "tesseract";
 		Runtime runtime = Runtime.getRuntime();
@@ -53,7 +54,7 @@ public class OCR_function {
 	 * @return read result
 	 */
 	public String ReadFile(String OutPath) {
-		// ¶ÁÈ¡ÎÄ¼þ
+		// ï¿½ï¿½È¡ï¿½Ä¼ï¿½
 		File file = new File(OutPath + ".txt");
 		BufferedReader bufReader;
 		String result = "no";
@@ -64,7 +65,7 @@ public class OCR_function {
 			while ((temp = bufReader.readLine()) != null) {
 				sb.append(temp);
 			}
-			// ÎÄ×Ö½á¹û
+			// ï¿½ï¿½ï¿½Ö½ï¿½ï¿½
 			result = sb.toString();
 			if (StringUtils.isNotBlank(result)) {
 			//	result = result.replaceAll(" ", "");

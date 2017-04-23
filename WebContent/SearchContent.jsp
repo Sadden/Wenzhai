@@ -128,6 +128,20 @@
  
 </head>
 <body style="background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)">
+	
+		<%    
+String Sol_ID = (String)session.getAttribute("sol_id"); 
+String HeadURL = (String)session.getAttribute("headimgurl");
+
+if(Sol_ID==null || HeadURL==null)
+{
+	System.out.println("empty session");
+	Sol_ID ="Sadden";
+	HeadURL = "asset/w5.jpg";
+}
+%> 
+
+	
 	<header class="am-topbar am-topbar-fixed-top">
 		<div class="am-container">
 			<h1 class="am-topbar-brand">
@@ -140,9 +154,9 @@
 				</div> -->
 
 				<div class="am-topbar-right">
-				<h1 class="am-topbar-brand">James Allobe</h1>
+				<h1 class="am-topbar-brand"><%=Sol_ID %></h1>
 					<div class="logo-img">
-						<img src="asset/w5.jpg" alt>
+						<img src=<%=HeadURL %> alt>
 					</div>
 				</div>
 			

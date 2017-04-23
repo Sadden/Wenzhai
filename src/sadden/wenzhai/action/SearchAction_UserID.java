@@ -27,9 +27,18 @@ public class SearchAction_UserID extends ActionSupport {
 		request.getSession();
 		HttpServletResponse response = ServletActionContext.getResponse();
 
+		String Sol_ID = (String)request.getSession().getAttribute("sol_id"); 
+		
+
+		if(Sol_ID==null)
+		{
+			System.out.println("empty session");
+			Sol_ID ="Sadden";
+		}
+		
 		
 		//for test I set UserID as sadden
-		UserID="sadden";
+		UserID= Sol_ID;
 		System.out.println("Search UserID:" + UserID);
 		luc = new Lucene_fuction();
 		ArrayList<Picture> PicList = new ArrayList<>();

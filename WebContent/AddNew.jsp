@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-<head lang="en">
+<head>
 <meta charset="UTF-8">
 <title>Add new</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -129,6 +129,19 @@
 	<!-- ${pageContext.request.contextPath}/upload/execute_upload.do -->
 	<!-- ${pageContext.request.contextPath}/upload2/upload2.do -->
 	
+	<%    
+String Sol_ID = (String)session.getAttribute("sol_id"); 
+String HeadURL = (String)session.getAttribute("headimgurl");
+
+if(Sol_ID==null || HeadURL==null)
+{
+	System.out.println("empty session");
+	Sol_ID ="Sadden";
+	HeadURL = "asset/w5.jpg";
+}
+%> 
+	
+	
 		<header class="am-topbar am-topbar-fixed-top">
 		<div class="am-container">
 			<h1 class="am-topbar-brand">
@@ -141,9 +154,9 @@
 				</div> -->
 
 				<div class="am-topbar-right">
-				<h1 class="am-topbar-brand">James Allobe</h1>
+				<h1 class="am-topbar-brand"><%=Sol_ID %></h1>
 					<div class="logo-img">
-						<img src="asset/w5.jpg" alt>
+						<img src=<%=HeadURL%> alt>
 					</div>
 				</div>
 			
@@ -159,20 +172,23 @@
 		<form action="AddAction.action" enctype="multipart/form-data" method="post" >
 			<p>
 				<font size="6" color="white">UserID:&nbsp; &nbsp;</font> 
-				<font size="6" color="gray">James Allobe</font>
-				 <input  id="UserID" type="hidden" name="UserID" value="James Allobe" /> 
+				<font size="6" color="gray"><%=Sol_ID %></font>
+				 <input  id="UserID" type="hidden" name="UserID" value=<%=Sol_ID %> /> 
 			</p>
 			<p>
-				<input type="file"  class="am-icon-btn am-icon-plus-circle"name="image" /> 
+			<font size="6" color="white">Upload:&nbsp; &nbsp;</font>
+				<input type="file"  name="image" /> 
 			</p>
 			<p>
 				<font size="6" color="white">Tag:&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</font> 
 				 <input type="text" name="Tag" value="" />
 			</p>
 			<p>
-			<div style="margin-top:10%">
+			<input name="Language" type="radio" value="ch" id="radiobox1" /><label style="color:white;" for="radiobox1">CH </label>
+			<input name="Language" type="radio" value="en" id="radiobox2" checked="checked" /><label style="color:white;" for="radiobox2">EN </label>
+			</p>
+			<p>
 				<input type="submit" class="btn btn-info" value="Generate Content" />
-			</div>
 			</p>
 		</form>
 

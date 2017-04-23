@@ -1,7 +1,11 @@
 package com.sadden.lucene;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,10 +30,9 @@ public class Junit_test {
 	@Test 
 	public void luc_cop()
 	{
-		String s="adb是收到的we1对方23";
-		System.out.println(s);
-		String n = WashOutCH(s);
-		System.out.println(n);
+
+		Lucene_fuction luc =new Lucene_fuction();
+		luc.readIndex();
 		
 	}
 	

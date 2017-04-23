@@ -59,6 +59,12 @@ import="com.sadden.lucene.*"
 			</p>
 			
 		</form>
+		
+		
+		<form action="Delete.action" method="post" class="base_form">
+			<input id="PicID" type="hidden" name="PicID" value=<%=PicID%> /> 	
+			<input type="submit"class="btn btn-danger" value="Delete" />
+		</form>
 		<%
 	}
 		%>

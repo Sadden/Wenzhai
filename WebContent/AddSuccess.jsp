@@ -140,7 +140,7 @@
 				</div> -->
 
 				<div class="am-topbar-right">
-				<h1 class="am-topbar-brand">James Allobe</h1>
+				<h1 class="am-topbar-brand">Sadden</h1>
 					<div class="logo-img">
 						<img src="asset/w5.jpg" alt>
 					</div>
