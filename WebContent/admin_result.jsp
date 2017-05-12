@@ -88,7 +88,7 @@
 			}
 			} else {
 		%>
-	<h1>No result found</h1>
+	<h1 class="text-center">No result found</h1>
 	<%
 }
 %>

@@ -32,28 +32,28 @@ public class Junit_test {
 	{
 
 		Lucene_fuction luc =new Lucene_fuction();
+//		Picture pic =new Picture("User1", "SA123", "2017-4-24" ,"URL", "Test");
+//		Picture pic2 = new Picture("User1", "SA123", "2017-4-24", "URL", "Update");
+		String content = "a car is an egg but no car can beat me in the wind, when I got pig car, car can be killed";
+		Picture pic3 = new Picture("User1", "SA456", "2017-4-24", "URL", "KeyTest");
+		pic3.setContent(content);
+//		luc.update_PicID2("SA123", pic2);
+		
+		
+//		luc.queryIndex_PicID("SA456");
+//		luc.AddIndex2(pic3);
+		luc.GetKeyContent("SA456");
+		luc.GetKeyContent("SA456");
 		luc.readIndex();
+//		
 		
+
+	        
+	        
 	}
 	
 	
-	public String WashOutCH(String OcrResult)
-	{
-		String FinResult = null;
-	    int n = 0;
-	    for(int i = 0; i < OcrResult.length(); i++) {
-	        n = (int)OcrResult.charAt(i);
-	        if(19968 <= n && n <40869) {
-	        	//the nth character in string is Chinese
-	            OcrResult=OcrResult.substring(0, i)+OcrResult.substring(i+1);
-	            i--;
-	        }
-	    }
-		FinResult = OcrResult;
-		
-		return FinResult;
-	}
-	
+
 	
 	@After
 	public void delete()

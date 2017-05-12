@@ -2,6 +2,7 @@
 import="com.sadden.lucene.*"
 	import="sadden.wenzhai.servelet.*" import="java.util.*"
 	import="sadden.wenzhai.action.*"
+	import="java.io.File.*" import="java.util.Map.*"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -18,8 +19,9 @@ import="com.sadden.lucene.*"
 	<!-- ${pageContext.request.contextPath}/upload/execute_upload.do -->
 	<!-- ${pageContext.request.contextPath}/upload2/upload2.do -->
 	<div class="main" align="center">
-	<%if(request.getAttribute("Picture")!=null){
+	<%if(request.getAttribute("Picture")!=null && request.getAttribute("TagList")!=null){
 		Picture pic=(Picture)request.getAttribute("Picture");
+		String TagList = (String)request.getAttribute("TagList");
 		if(pic!=null)
 		{
 			
@@ -31,9 +33,12 @@ import="com.sadden.lucene.*"
 				String Content = pic.getContent();
 			%>
 			<h2>Check below:</h2>
-		<form action="DoOCR.action" enctype="multipart/form-data" method="post" >
-			<img src="<%=request.getServletContext().getContextPath()+"/images/"+URL%>">
+		<form class="text-center" action="DoOCR.action" enctype="multipart/form-data" method="post" >
+			<img src="<%=request.getServletContext().getContextPath()+"/images/"+URL%>" style="margin-right: auto;margin-left:auto" width="200px" height="200px">
 			<h4>Content:<%=Content %></h4>
+			<br>
+			<font size=8>Auto Tag is: <%=TagList %></font>
+			<br>
 			<table class="table table-bordered table-hover">
 				<tr>
 					<th class="text-center">UserID</th>

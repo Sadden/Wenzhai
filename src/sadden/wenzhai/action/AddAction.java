@@ -1,10 +1,11 @@
 package sadden.wenzhai.action;
 
 import java.io.File;
+import java.util.List;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
@@ -69,7 +70,23 @@ public class AddAction extends ActionSupport {
 		Lucene_fuction luc = new Lucene_fuction();
 		luc.AddIndex2(pic);
 		
+		String TagList = "";
+		int ListNum  = 3;
+		List<Entry<String, Integer>> sortlist = luc.GetKeyContent(pic.getPicId());
+		for (int i = 0; i < ListNum; i++) {
+			if(i==(ListNum -1))
+			{
+				TagList = TagList + sortlist.get(i).getKey();
+			}
+			else
+			{
+			TagList = TagList + sortlist.get(i).getKey()+",";
+			}
+        }
+		 
+		
 		request.setAttribute("Picture", pic);
+		request.setAttribute("TagList", TagList);
 		
 		return "AddSuccess";
 	}

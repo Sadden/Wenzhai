@@ -45,7 +45,7 @@ import="com.sadden.lucene.*"
 				<label>Tag：</label>  <input type="text" name="Tag" value=<%=Tag %> />
 			</p>
 			<p>
-				<img src="<%=request.getServletContext().getContextPath()+"/images/"+URL%>">				
+				<img src="<%=request.getServletContext().getContextPath()+"/images/"+URL%>" style="margin-right: auto;margin-left:auto" width="30%" height="30%">				
 				<input id="URL" type="hidden" name="URL" value=<%=URL%>/>
 			</p>
 

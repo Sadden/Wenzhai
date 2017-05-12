@@ -729,7 +729,7 @@ if(Sol_ID==null || HeadURL==null)
 
 	<div class="am-g" style="margin-top: 5%">
 
-		<br> <font size="8" color="white">Search Content</font> <br>
+		<br> <font size="8" color="white">Search Result</font> <br>
 
 		<!-- this is the result table  -->
 
@@ -776,12 +776,12 @@ if(Sol_ID==null || HeadURL==null)
 		<%
 			} else {
 		%>
-		<h1>No result found</h1>
+		<font size="8" color="white">No Result Found</font>
 		<%
 			}
 			} else {
 		%>
-		<h1>No result found</h1>
+		<font size="8" color="white">No Result Found</font>
 		<%
 }
 %>

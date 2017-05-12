@@ -16,7 +16,7 @@ public class DeleteAction extends ActionSupport {
 	{
 
 		PicID=PicID.replaceAll("/","");
-		UserID=UserID.replaceAll("/","");
+
 		System.out.println("delete Id:"+PicID);
 		
 		Lucene_fuction luc = new Lucene_fuction();

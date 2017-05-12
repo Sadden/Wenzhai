@@ -189,12 +189,12 @@ if(Sol_ID==null || HeadURL==null)
 			<font size="5" color="white"><%=Time%></font>
 			<input id="Time" type="hidden" name="Time" value=<%=Time%>/>
 			</p>
-			<p>
+			<p >
 				<font size="4" color="white">Tag:</font> 
 				<input type="text" name="Tag" value=<%=Tag %> />
 			</p>
-			<p>
-				<img src="<%=request.getServletContext().getContextPath()+"/images/"+URL%>">				
+			<p class="text-center">
+				<img src="<%=request.getServletContext().getContextPath()+"/images/"+URL%>" style="margin-right: auto;margin-left:auto" width="200px" height="200px">				
 				<input id="URL" type="hidden" name="URL" value=<%=URL%>/>
 			</p>
 
@@ -203,15 +203,19 @@ if(Sol_ID==null || HeadURL==null)
 				 <textarea class="form-control" rows="3" name="Content" ><%=Content %></textarea>
 			</p>
 			
-			<p>
+			<p class="text-center">
 				 <input type="submit" class="btn btn-info" value="OK" />
 			</p>
 			
 		</form>
-			<form action="Delete.action" method="post" class="base_form">
+
+		<form action="Delete.action" method="post" class="text-center">
 			<input id="PicID" type="hidden" name="PicID" value=<%=PicID%> /> 	
 			<input type="submit"class="btn btn-danger" value="Delete" />
 		</form>
+
+			
+		
 		<%
 	}
 		%>
@@ -219,7 +223,7 @@ if(Sol_ID==null || HeadURL==null)
 	
 	</div>
 	
-		<script src="js/jquery.min.js"></script>
+	<script src="js/jquery.min.js"></script>
 	<script src="js/amazeui.min.js"></script>
 	<script src='http://www.5iweb.com.cn/statics/js/jquery.1.7.1.min.js'></script>
     <script src="js/inputshine/index.js"></script> 

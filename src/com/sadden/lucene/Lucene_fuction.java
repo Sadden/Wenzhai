@@ -3,6 +3,12 @@ package com.sadden.lucene;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -18,6 +24,8 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.index.Terms;
+import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -28,6 +36,7 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.BytesRef;
 
 import sadden.wenzahi.IK.MyIKAnalyzer;
 
@@ -440,7 +449,8 @@ public class Lucene_fuction {
 				config = new IndexWriterConfig(analyzer);
 				writer = new IndexWriter(directory, config);
 			}
-			Term term = new Term("PicID", PicID);
+			String PicID_L = PicID.toLowerCase();
+			Term term = new Term("PicID", PicID_L);
 			writer.deleteDocuments(term);
 			writer.commit();
 			writer.close();
@@ -466,7 +476,8 @@ public class Lucene_fuction {
 				config = new IndexWriterConfig(analyzer);
 				writer = new IndexWriter(directory, config);
 			}
-			Term term = new Term("PicID", PicID);
+			String PicID_L = PicID.toLowerCase();
+			Term term = new Term("PicID", PicID_L);
 			Document doc = new Document();
 			doc.add(new StringField("UserID", newpic.getUserId(), Field.Store.YES));
 			doc.add(new StringField("PicID", newpic.getPicId(), Field.Store.YES));
@@ -499,13 +510,17 @@ public class Lucene_fuction {
 				config = new IndexWriterConfig(smcAnalyzer);
 				writer = new IndexWriter(directory, config);
 			}
-			Term term = new Term("PicID", PicID);
+			System.out.println("Now update: "+PicID);
+			newpic.show();
+			
+			String PicID_L = PicID.toLowerCase();
+			Term term = new Term("PicID", PicID_L);
 			Document doc = new Document();
-			doc.add(new StringField("UserID", newpic.getUserId(), Field.Store.YES));
-			doc.add(new StringField("PicID", newpic.getPicId(), Field.Store.YES));
-			doc.add(new StringField("Time", newpic.getTime(), Field.Store.YES));
-			doc.add(new StringField("URL", newpic.getURL(), Field.Store.YES));
-			doc.add(new StringField("tag", newpic.getTag(), Field.Store.YES));
+			doc.add(new TextField("UserID", newpic.getUserId(), Store.YES));
+			doc.add(new TextField("PicID", newpic.getPicId(), Store.YES));
+			doc.add(new StringField("Time", newpic.getTime(), Store.YES));
+			doc.add(new StringField("URL", newpic.getURL(), Store.YES));
+			doc.add(new TextField("tag", newpic.getTag(), Store.YES));
 			
 			  // 新建FieldType,用于指定字段索引时的信息
 	        FieldType type = new FieldType();
@@ -531,7 +546,66 @@ public class Lucene_fuction {
 	}
 
 	
-	
+	public List<Entry<String, Integer>> GetKeyContent(String PicID) 
+	{
+		analyzer = new StandardAnalyzer();
+		try{
+		if (reader == null) 
+		{
+			System.out.println("reader is null, new reader");
+			directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
+			reader = DirectoryReader.open(directory);
+		}
+		//use the lower instead character
+		String PicID_L = PicID.toLowerCase();
+		System.out.println("***************Get content Key from PicID: "+PicID);
+		IndexSearcher searcher = new IndexSearcher(reader);
+		QueryParser parse = new QueryParser("PicID", analyzer);
+		Query query = parse.parse(PicID);
+		TopDocs topDocs = searcher.search(query, 1000);
+		ScoreDoc[] hits = topDocs.scoreDocs;
+		if (hits.length == 0) {
+			System.out.println("no result");
+			
+			reader.close();
+			return null;
+		} else {
+			
+			ScoreDoc hit = hits[0];
+			int DocID = hit.doc;
+			Terms terms = reader.getTermVector(DocID, "Content");
+			
+			 TermsEnum termsEnum = terms.iterator(null);
+		     BytesRef thisTerm = null;
+		     Map<String, Integer> map = new HashMap<String, Integer>();
+		     //save TF and the words into map
+		     
+		        while ((thisTerm = termsEnum.next()) != null) {
+		            String termText = thisTerm.utf8ToString();
+		            map.put(termText, (int) termsEnum.totalTermFreq());
+		        }
+		        //save map into a list for sorting
+		        List<Map.Entry<String, Integer>> sortedMap = new ArrayList<Map.Entry<String, Integer>>(map.entrySet());
+		        Collections.sort(sortedMap, new Comparator<Map.Entry<String, Integer>>() {
+		            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+		                return (o2.getValue() - o1.getValue());
+		            }
+		        });
+			//show the result
+		        for (int i = 0; i < map.size(); i++) {
+		            System.out.println(sortedMap.get(i).getKey() + ":" + sortedMap.get(i).getValue());
+		        }
+		        return sortedMap;
+		}
+		
+		
+		}
+		catch (Exception e) {
+		
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 	
 	

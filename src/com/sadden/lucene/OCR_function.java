@@ -27,8 +27,8 @@ public class OCR_function {
 			OcrLangData = "-l eng";
 		} else {
 			System.out.println("in Chinese");
-//			OcrLangData = "-l chi_sim";
-			OcrLangData = "-l New1";
+			OcrLangData = "-l chi_sim";
+	//		OcrLangData = "-l New1 nobatch";
 		}
 		String OcrCommand = "tesseract";
 		Runtime runtime = Runtime.getRuntime();
