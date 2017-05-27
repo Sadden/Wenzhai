@@ -66,6 +66,10 @@
  <result name = "UpdateOK">/D_admin_index.jsp</result>
 </action>
 
+<action name = "Retrieve"   method= "FindPaper"  class = "sadden.wenzhai.action.RetrieveAction">
+ <result name = "FindOK">/D_Retrieve_result.jsp</result>
+</action>
+
 
 </package>
 

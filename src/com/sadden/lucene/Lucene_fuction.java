@@ -54,15 +54,24 @@ public class Lucene_fuction {
 	public Picture pic_pre1;
 	public Picture pic_pre2;
 
+	public String indexpath;
+
+	public Lucene_fuction() {
+		// the index URL
+		indexpath = "G:\\Lucene_index2";
+		// indexpath = "G:\\Lucene_index";
+	}
 
 	/**
 	 * Add a new picture into lucene index.
-	 * @param pic the new picture
+	 * 
+	 * @param pic
+	 *            the new picture
 	 */
 	public void AddIndex(Picture pic) {
 		try {
 			if (writer == null) {
-				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
+				directory = FSDirectory.open(Paths.get(indexpath));
 				analyzer = new StandardAnalyzer();
 				config = new IndexWriterConfig(analyzer);
 				writer = new IndexWriter(directory, config);
@@ -85,15 +94,16 @@ public class Lucene_fuction {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * use IKAnalyzer to add index
+	 * 
 	 * @param pic
 	 */
 	public void AddIndex2(Picture pic) {
 		try {
 			if (writer == null) {
-				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
+				directory = FSDirectory.open(Paths.get(indexpath));
 				Analyzer smcAnalyzer = new MyIKAnalyzer();
 				config = new IndexWriterConfig(smcAnalyzer);
 				writer = new IndexWriter(directory, config);
@@ -106,15 +116,15 @@ public class Lucene_fuction {
 			doc.add(new StringField("Time", pic.getTime(), Store.YES));
 			doc.add(new StringField("URL", pic.getURL(), Store.YES));
 			doc.add(new TextField("tag", pic.getTag(), Store.YES));
-			
-	        // 新建FieldType,用于指定字段索引时的信息
-	        FieldType type = new FieldType();
-	        // 索引时保存文档、词项频率、位置信息、偏移信息
-	        type.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
-	        type.setStored(true);// 原始字符串全部被保存在索引中
-	        type.setStoreTermVectors(true);// 存储词项量
-	        type.setTokenized(true);// 词条化
-	        
+
+			// 新建FieldType,用于指定字段索引时的信息
+			FieldType type = new FieldType();
+			// 索引时保存文档、词项频率、位置信息、偏移信息
+			type.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
+			type.setStored(true);// 原始字符串全部被保存在索引中
+			type.setStoreTermVectors(true);// 存储词项量
+			type.setTokenized(true);// 词条化
+
 			doc.add(new Field("Content", pic.getContent(), type));
 
 			writer.addDocument(doc);
@@ -122,15 +132,11 @@ public class Lucene_fuction {
 			writer.close();
 			directory.close();
 			System.out.println("writer closed");
-			
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
 
 	/**
 	 * read all the index in lucene
@@ -139,7 +145,7 @@ public class Lucene_fuction {
 		try {
 			if (reader == null) {
 				System.out.println("reader is null, new reader");
-				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
+				directory = FSDirectory.open(Paths.get(indexpath));
 				reader = DirectoryReader.open(directory);
 			}
 			System.out.println("max num:" + reader.maxDoc());
@@ -166,7 +172,7 @@ public class Lucene_fuction {
 			analyzer = new StandardAnalyzer();
 			if (reader == null) {
 				System.out.println("reader is null, new reader");
-				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
+				directory = FSDirectory.open(Paths.get(indexpath));
 				reader = DirectoryReader.open(directory);
 			}
 			IndexSearcher searcher = new IndexSearcher(reader);
@@ -174,7 +180,7 @@ public class Lucene_fuction {
 			QueryParser parse = new QueryParser("Content", analyzer);
 			// ��ѯ�ؼ���
 			Query query = parse.parse(Content);
-			System.out.println("**************query:"+query);
+			System.out.println("**************query:" + query);
 			TopDocs topDocs = searcher.search(query, 1000);
 			// ��ײ��� query for socredoc[]
 			ScoreDoc[] hits = topDocs.scoreDocs;
@@ -186,14 +192,14 @@ public class Lucene_fuction {
 				for (int i = 0; i < hits.length; i++) {
 					// build for each scoredoc
 					ScoreDoc hit = hits[i];
-					 // ȡ����document�Ķ���id
-		            int docID = hit.doc;
+					// ȡ����document�Ķ���id
+					int docID = hit.doc;
 
-		            // ��ضȵ÷�
-		            float score = hit.score;
-		            
-		            System.out.println("ID:"+docID);
-		            System.out.println("score:"+score);
+					// ��ضȵ÷�
+					float score = hit.score;
+
+					System.out.println("ID:" + docID);
+					System.out.println("score:" + score);
 					// get the doc from each scoredoc
 					Document hitDoc = searcher.doc(hit.doc);
 					// ����յ÷���������Ҫ�� �ؼ��ֵĸ����Ȩֵ������
@@ -222,7 +228,7 @@ public class Lucene_fuction {
 			analyzer = new StandardAnalyzer();
 			if (reader == null) {
 				System.out.println("reader is null, new reader");
-				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
+				directory = FSDirectory.open(Paths.get(indexpath));
 				reader = DirectoryReader.open(directory);
 			}
 			IndexSearcher searcher = new IndexSearcher(reader);
@@ -262,7 +268,6 @@ public class Lucene_fuction {
 		return PicList;
 	}
 
-	
 	public ArrayList<Picture> queryIndex_PicID(String PicID) {
 		ArrayList<Picture> PicList = new ArrayList<>();
 		try {
@@ -271,7 +276,7 @@ public class Lucene_fuction {
 			analyzer = new StandardAnalyzer();
 			if (reader == null) {
 				System.out.println("reader is null, new reader");
-				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
+				directory = FSDirectory.open(Paths.get(indexpath));
 				reader = DirectoryReader.open(directory);
 			}
 			IndexSearcher searcher = new IndexSearcher(reader);
@@ -310,12 +315,6 @@ public class Lucene_fuction {
 		return PicList;
 	}
 
-	
-	
-	
-	
-	
-	
 	/**
 	 * query index in UserID
 	 * 
@@ -328,7 +327,7 @@ public class Lucene_fuction {
 		try {
 			analyzer = new StandardAnalyzer();
 			if (reader == null) {
-				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
+				directory = FSDirectory.open(Paths.get(indexpath));
 				reader = DirectoryReader.open(directory);
 			}
 			IndexSearcher searcher = new IndexSearcher(reader);
@@ -349,7 +348,7 @@ public class Lucene_fuction {
 					ScoreDoc hit = hits[i];
 					// get the doc from each scoredoc
 					Document hitDoc = searcher.doc(hit.doc);
-					
+
 					// ����յ÷���������Ҫ�� �ؼ��ֵĸ����Ȩֵ������
 					showResult(hit, hitDoc);
 					addResult(hit, hitDoc, PicList);
@@ -361,9 +360,7 @@ public class Lucene_fuction {
 		}
 		return PicList;
 	}
-	
-	
-	
+
 	/**
 	 * show the content & fields of a result hit
 	 * 
@@ -421,7 +418,7 @@ public class Lucene_fuction {
 	public void delete_tag(String tag) {
 		try {
 			if (writer == null) {
-				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
+				directory = FSDirectory.open(Paths.get(indexpath));
 				analyzer = new StandardAnalyzer();
 				config = new IndexWriterConfig(analyzer);
 				writer = new IndexWriter(directory, config);
@@ -444,7 +441,7 @@ public class Lucene_fuction {
 	public void delete_PicID(String PicID) {
 		try {
 			if (writer == null) {
-				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
+				directory = FSDirectory.open(Paths.get(indexpath));
 				analyzer = new StandardAnalyzer();
 				config = new IndexWriterConfig(analyzer);
 				writer = new IndexWriter(directory, config);
@@ -471,7 +468,7 @@ public class Lucene_fuction {
 	public void update_PicID(String PicID, Picture newpic) {
 		try {
 			if (writer == null) {
-				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
+				directory = FSDirectory.open(Paths.get(indexpath));
 				analyzer = new StandardAnalyzer();
 				config = new IndexWriterConfig(analyzer);
 				writer = new IndexWriter(directory, config);
@@ -494,25 +491,26 @@ public class Lucene_fuction {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * update the picture with IKAnalyzer
+	 * 
 	 * @param PicID
-	 * to find original picture
+	 *            to find original picture
 	 * @param newpic
-	 * new picture 
+	 *            new picture
 	 */
 	public void update_PicID2(String PicID, Picture newpic) {
 		try {
 			if (writer == null) {
-				directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
+				directory = FSDirectory.open(Paths.get(indexpath));
 				Analyzer smcAnalyzer = new MyIKAnalyzer();
 				config = new IndexWriterConfig(smcAnalyzer);
 				writer = new IndexWriter(directory, config);
 			}
-			System.out.println("Now update: "+PicID);
+			System.out.println("Now update: " + PicID);
 			newpic.show();
-			
+
 			String PicID_L = PicID.toLowerCase();
 			Term term = new Term("PicID", PicID_L);
 			Document doc = new Document();
@@ -521,92 +519,145 @@ public class Lucene_fuction {
 			doc.add(new StringField("Time", newpic.getTime(), Store.YES));
 			doc.add(new StringField("URL", newpic.getURL(), Store.YES));
 			doc.add(new TextField("tag", newpic.getTag(), Store.YES));
-			
-			  // 新建FieldType,用于指定字段索引时的信息
-	        FieldType type = new FieldType();
-	        // 索引时保存文档、词项频率、位置信息、偏移信息
-	        type.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
-	        type.setStored(true);// 原始字符串全部被保存在索引中
-	        type.setStoreTermVectors(true);// 存储词项量
-	        type.setTokenized(true);// 词条化
-	        
+
+			// 新建FieldType,用于指定字段索引时的信息
+			FieldType type = new FieldType();
+			// 索引时保存文档、词项频率、位置信息、偏移信息
+			type.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
+			type.setStored(true);// 原始字符串全部被保存在索引中
+			type.setStoreTermVectors(true);// 存储词项量
+			type.setTokenized(true);// 词条化
+
 			doc.add(new Field("Content", newpic.getContent(), type));
-			
+
 			// ���µ�ʱ�򣬻��ԭ���Ǹ�����ɾ�����������һ������
 			writer.updateDocument(term, doc);
 			writer.commit();
 			writer.close();
 			directory.close();
 			System.out.println("update writer closed");
-			
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	
-	public List<Entry<String, Integer>> GetKeyContent(String PicID) 
-	{
+	/**
+	 * get the key words from the picture with the picture ID
+	 * 
+	 * @param PicID
+	 * @return
+	 */
+	public List<Entry<String, Integer>> GetKeyContent(String PicID) {
 		analyzer = new StandardAnalyzer();
-		try{
-		if (reader == null) 
-		{
-			System.out.println("reader is null, new reader");
-			directory = FSDirectory.open(Paths.get("G:\\Lucene_index"));
-			reader = DirectoryReader.open(directory);
-		}
-		//use the lower instead character
-		String PicID_L = PicID.toLowerCase();
-		System.out.println("***************Get content Key from PicID: "+PicID);
-		IndexSearcher searcher = new IndexSearcher(reader);
-		QueryParser parse = new QueryParser("PicID", analyzer);
-		Query query = parse.parse(PicID);
-		TopDocs topDocs = searcher.search(query, 1000);
-		ScoreDoc[] hits = topDocs.scoreDocs;
-		if (hits.length == 0) {
-			System.out.println("no result");
-			
-			reader.close();
-			return null;
-		} else {
-			
-			ScoreDoc hit = hits[0];
-			int DocID = hit.doc;
-			Terms terms = reader.getTermVector(DocID, "Content");
-			
-			 TermsEnum termsEnum = terms.iterator(null);
-		     BytesRef thisTerm = null;
-		     Map<String, Integer> map = new HashMap<String, Integer>();
-		     //save TF and the words into map
-		     
-		        while ((thisTerm = termsEnum.next()) != null) {
-		            String termText = thisTerm.utf8ToString();
-		            map.put(termText, (int) termsEnum.totalTermFreq());
-		        }
-		        //save map into a list for sorting
-		        List<Map.Entry<String, Integer>> sortedMap = new ArrayList<Map.Entry<String, Integer>>(map.entrySet());
-		        Collections.sort(sortedMap, new Comparator<Map.Entry<String, Integer>>() {
-		            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-		                return (o2.getValue() - o1.getValue());
-		            }
-		        });
-			//show the result
-		        for (int i = 0; i < map.size(); i++) {
-		            System.out.println(sortedMap.get(i).getKey() + ":" + sortedMap.get(i).getValue());
-		        }
-		        return sortedMap;
-		}
-		
-		
-		}
-		catch (Exception e) {
-		
+		try {
+			if (reader == null) {
+				System.out.println("reader is null, new reader");
+				directory = FSDirectory.open(Paths.get(indexpath));
+				reader = DirectoryReader.open(directory);
+			}
+			// use the lower instead character
+			String PicID_L = PicID.toLowerCase();
+			System.out.println("***************Get content Key from PicID: " + PicID);
+			IndexSearcher searcher = new IndexSearcher(reader);
+			QueryParser parse = new QueryParser("PicID", analyzer);
+			Query query = parse.parse(PicID);
+			TopDocs topDocs = searcher.search(query, 1000);
+			ScoreDoc[] hits = topDocs.scoreDocs;
+			if (hits.length == 0) {
+				System.out.println("no result");
+
+				reader.close();
+				return null;
+			} else {
+
+				ScoreDoc hit = hits[0];
+				int DocID = hit.doc;
+				Terms terms = reader.getTermVector(DocID, "Content");
+
+				TermsEnum termsEnum = terms.iterator(null);
+				BytesRef thisTerm = null;
+				Map<String, Integer> map = new HashMap<String, Integer>();
+				// save TF and the words into map
+
+				while ((thisTerm = termsEnum.next()) != null) {
+					String termText = thisTerm.utf8ToString();
+					map.put(termText, (int) termsEnum.totalTermFreq());
+				}
+				// save map into a list for sorting
+				List<Map.Entry<String, Integer>> sortedMap = new ArrayList<Map.Entry<String, Integer>>(map.entrySet());
+				Collections.sort(sortedMap, new Comparator<Map.Entry<String, Integer>>() {
+					public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+						return (o2.getValue() - o1.getValue());
+					}
+				});
+				// show the result
+				for (int i = 0; i < map.size(); i++) {
+					System.out.println(sortedMap.get(i).getKey() + ":" + sortedMap.get(i).getValue());
+				}
+				return sortedMap;
+			}
+
+		} catch (Exception e) {
+
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
-	
-	
+
+	/**
+	 * Correct the content into new terms in the wordslist
+	 * @param PicID
+	 * @return
+	 */
+	public String CorrectContent(String PicID) {
+		analyzer = new StandardAnalyzer();
+		try {
+			if (reader == null) {
+				System.out.println("reader is null, new reader");
+				directory = FSDirectory.open(Paths.get(indexpath));
+				reader = DirectoryReader.open(directory);
+			}
+			// use the lower instead character
+			String PicID_L = PicID.toLowerCase();
+			System.out.println("***************Get content Key from PicID: " + PicID);
+			IndexSearcher searcher = new IndexSearcher(reader);
+			QueryParser parse = new QueryParser("PicID", analyzer);
+			Query query = parse.parse(PicID);
+			TopDocs topDocs = searcher.search(query, 1000);
+			ScoreDoc[] hits = topDocs.scoreDocs;
+			if (hits.length == 0) {
+				System.out.println("no result");
+
+				reader.close();
+				return null;
+			} else {
+
+				ScoreDoc hit = hits[0];
+				int DocID = hit.doc;
+				Document hitDoc = searcher.doc(hit.doc);
+				String Content1 = hitDoc.get("Content");
+				String Content2 = Content1;
+				Terms terms = reader.getTermVector(DocID, "Content");
+
+				TermsEnum termsEnum = terms.iterator(null);
+				BytesRef thisTerm = null;
+				Word_function wor = new Word_function("G:\\EnglishWordList\\wordlist.txt");
+				while ((thisTerm = termsEnum.next()) != null) {
+					String termText = thisTerm.utf8ToString();
+					String newTerm = wor.FindMostLike(termText);
+					System.out.println("replace "+termText+" to "+newTerm);
+					Content2 = Content2.replaceAll(termText, newTerm);
+					
+				}
+
+				return Content2;
+			}
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 }

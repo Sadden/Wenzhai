@@ -70,6 +70,11 @@ public class AddAction extends ActionSupport {
 		Lucene_fuction luc = new Lucene_fuction();
 		luc.AddIndex2(pic);
 		
+		String newContent = luc.CorrectContent(pic.getPicId());
+		pic.setContent(newContent);
+		Lucene_fuction luc2 = new Lucene_fuction();
+		luc2.update_PicID2(pic.getPicId(), pic);
+		
 		String TagList = "";
 		int ListNum  = 3;
 		List<Entry<String, Integer>> sortlist = luc.GetKeyContent(pic.getPicId());

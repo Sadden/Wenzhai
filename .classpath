@@ -28,5 +28,8 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/struts2-core-2.3.24.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/xwork-core-2.3.24.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/javassist-3.11.0.GA.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/javabuilder.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/matlabcontrol-4.1.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/lenovo/Desktop/分词/IK/IKAnalyzer2012_u6.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

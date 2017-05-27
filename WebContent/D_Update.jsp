@@ -213,8 +213,14 @@ if(Sol_ID==null || HeadURL==null)
 			<input id="PicID" type="hidden" name="PicID" value=<%=PicID%> /> 	
 			<input type="submit"class="btn btn-danger" value="Delete" />
 		</form>
+		
+		<br>
 
-			
+
+		<form action="Retrieve.action" method="post" class="text-center">
+			<input id="Content" type="hidden" name="Content" value=<%=Content%> /> 	
+			<input type="submit"class="btn btn-base" value="Find Similar Paper" />
+		</form>
 		
 		<%
 	}
