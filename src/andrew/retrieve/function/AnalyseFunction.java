@@ -30,6 +30,7 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause;
@@ -573,10 +574,10 @@ public class AnalyseFunction {
 		if(str==null)return list;
 		if(str.length()==0)return list;
 		try {
-			FSDirectory dir=FSDirectory.open(Paths.get(PaperIndexDir));
+			FSDirectory dir=FSDirectory.open(Paths.get(AbstractIndexDir));
 			IndexSearcher searcher=new IndexSearcher(DirectoryReader.open(dir));
 			Analyzer analyzer=new StandardAnalyzer();
-			QueryParser parser=new QueryParser("content",analyzer);
+			QueryParser parser=new QueryParser("description",analyzer);
 			String q=QueryParser.escape(str);
 			Query query=parser.parse(q);
 			//System.out.println(query);
@@ -599,8 +600,11 @@ public class AnalyseFunction {
 				//System.out.println(d.get("code"));
 				Paper p=new Paper();
 				p.title=d.get("title");
-				p.description=d.get("description");
-				p.url=d.get("code");
+				p.description=d.get("description2");
+				p.url=d.get("identifier");
+				p.authors=d.get("author");
+				p.subject=d.get("subject");
+				p.date=d.get("date");
 				list.add(p);
 				//list.add(d.get("code")+"###"+d.get("title")+"###"+"Author"+"###"+"Abstract"+"###"+"url");
 			}
@@ -1038,9 +1042,10 @@ public class AnalyseFunction {
 		//fun.load();
 		//fun.FirstTest(null);
 		///System.out.println("sss");
-	List<Paper> list=fun.KddSearchTitleCode(null, 30);
+	List<Paper> list=fun.KddSearchTitleCode("Bitcoin Mining Decentralization via Cost Analysis", 30);
+	System.out.println(list.size());
 		for(Paper s:list){
-			System.out.println(s.title+" "+s.url);
+			System.out.println(s.title+" "+s.url+" "+s.description+" "+s.authors+" "+s.subject);
 		}
 	//List<String>g  sort=fun.pageRank(list,20);
 		

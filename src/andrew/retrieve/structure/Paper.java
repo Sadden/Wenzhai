@@ -6,11 +6,18 @@ public class Paper{
 	public String description;
 	public String subject;
 	public String url;
+	public String date;
 	public Paper(){
 		title="Titleless";
 		authors="Anonymous";
 		subject="unknown";
 		url="no related resource";
+	}
+	public String getDate(){
+		return date;
+	}
+	public void setDate(String d){
+		date=d;
 	}
 	public String getTitle() {
 		return title;

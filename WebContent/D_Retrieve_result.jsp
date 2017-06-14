@@ -31,7 +31,7 @@ contentType="text/html; charset=ISO-8859-1"
 
 		<table class="table table-bordered table-hover">
 			<tr class="active">
-			<h3><a><%=title %></a> </h3>
+			<h3><a href=<%=URL %>><%=title %></a> </h3>
 			<p>
 			<h3><%=description %></h3>
 			</p>
